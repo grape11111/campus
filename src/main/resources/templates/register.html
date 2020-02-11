@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>校园实习网</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
+
+    <script src="js/jquery-3.4.1.min.js" type="application/javascript"></script>
+    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+
+</head>
+<body>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--登陆框头部-->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    ×
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    欢迎登陆！
+                </h4>
+            </div>
+            <!--登陆框中间部分(from表单)-->
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" action="/login" method="post">
+                    <!--用户框-->
+                    <div class="form-group">
+                        <label for="username" class="col-sm-2 control-label">账号</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="" required="required">
+                        </div>
+                    </div>
+                    <!--密码框-->
+                    <div class="form-group">
+                        <label for="password" class="col-sm-2 control-label" >密码</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="password"  name="password" placeholder="" required="required">
+                        </div>
+                    </div>
+                    <!--用户类型-->
+                    <div class="form-group">
+                        <label for="password" class="col-sm-2 control-label" >用户类型</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="type" name="type">
+                                <option value="0">学生</option>
+                                <option value="1">教师</option>
+                                <option value="2">企业用户</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--记住密码-->
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"> 记住密码
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!--登陆按钮-->
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary">登录</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
+
+
+
+
+<!--
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Grape社区 首页</title>
+</head>
+<body>
+<div>
+        <h3>成功显示</h3>
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    h3{width:100%;padding-bottom:10px;border-bottom:2px solid #CCC;}
+    #close{position:absolute;top:2px;right:2px;}
+    #close span{padding:3px 10px;background-color: #999;font-size:20px;color:white;cursor:pointer;}
+    #log{display: none; width: 400px; height: 400px; padding: 30px 40px; background-color: #F3F5F6; position: fixed; top: 70px;; right: 30px;}
+    .error{float:right;color:red;font-size:1.2em;margin-right:10px}
+</style>
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/css/community.css">
+
+<script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
+<script src="/js/bootstrap.min.js" type="application/javascript"></script>
+
+<body>
+<button onclick="document.getElementById('log').style.display='block'">弹出登录框</button>
+
+<div id="log">
+    <form  action="../control/logincheck.php" method="post">
+        <h3 >请登录</h3>
+        <div class="form-group">
+            <label for="username">用户名*</label>
+            <span id="user"  class="error"> </span>
+            <input type="text" class="form-control"  name="username"
+                   id="username" placeholder="用户名" onblur='checkName()' required />
+        </div>
+        <div class="form-group">
+            <label for="password">密码*</label>
+            <span id="psword" class="error"> </span>
+
+            <input type="password" class="form-control"
+                   name="password"
+                   id="password" placeholder="密码" onblur='checkPassword()' required />
+
+        </div>
+        <div class="checkbox">
+            <label>
+                <span><input type="checkbox" value='true' style="width:15px;height:15px;" > 记住我</span>
+
+            </label>
+        </div>
+        <input type="submit" class="btn btn-primary login-button" value="登录" style="width:70px;height:40px;" />
+        <p class="text-success"  ><a href="register.html">>>还没账号？去注册</a></p>
+
+    </form>
+
+    <div id="close" >
+        <span onclick="document.getElementById('log').style.display='none'">关闭</span>
+    </div>
+
+
+
+</div>
+<script>
+
+    var checkName=function() {
+        document.getElementById("user").innerHTML ="";
+        var name = eval(document.getElementById('username')).value;
+        if (name.length > 20 || name.length < 1)
+            document.getElementById("user").innerHTML = "用户名长度在1-20之间！" ;
+    }
+    var checkPassword = function(){
+        document.getElementById("psword").innerHTML ="";
+        var name = eval(document.getElementById('password')).value;
+        if (name.length > 12 || name.length < 6)
+            document.getElementById("psword").innerHTML="密码长度在6-12之间！" ;
+    }
+
+</script>
+</body>
+</html>
+-->

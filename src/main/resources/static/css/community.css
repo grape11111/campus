@@ -18,14 +18,21 @@ body{
 }
 
 .btn-login{
-    margin: 10px 80px;
+    margin: 10px 10px;
 }
 
 
 .media-object{
-    width:40px;
-    height:40px;
+    width:70px;
+    height:70px;
 }
+
+.btn-editPwd{
+    padding:5px 7px;
+    margin-top: 20px;
+
+}
+
 
 .desc{
     font-size:12px;
