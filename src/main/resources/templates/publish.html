@@ -21,11 +21,11 @@
 
             <form action="/publish" method="post">
                 <div class="form-group">
-                    <label for="title">问题标题（简单摘要）：</label>
+                    <label for="title">分享主题（简单摘要）：</label>
                     <input type="text" class="form-control" th:value="${title}" id="title" name="title" placeholder="问题标题...">
                 </div>
                 <div class="form-group">
-                    <label for="description">问题补充（必填，请参考右侧提示）</label>
+                    <label for="description">内容（必填，请参考右侧提示）</label>
                     <textarea id="description" name="description"  th:text="${description}" class="form-control" cols="30" rows="10"> </textarea>
                 </div>
                 <div class="form-group">
@@ -39,7 +39,7 @@
             </form>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h3>问题发起摘要</h3>
+            <h3>发起分享的摘要</h3>
             •1.....</br>
             •2.....</br>
             •3.....</br>

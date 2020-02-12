@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -31,11 +32,27 @@ public class IndexController {
 
     @GetMapping("/campus")
     public String index(HttpServletRequest request){
+        Cookie[]cookies=request.getCookies();
+        if (cookies!=null&&cookies.length!=0) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName() != null) {
+                    if (("accountId").equals(cookie.getName())) {
+                        StudentExample studentExample = new StudentExample();
+                        studentExample.createCriteria()
+                                .andAccountIdEqualTo(cookie.getValue());
+                        List<Student> list=studentMapper.selectByExample(studentExample);
+                        if (list.size()!=0) {
+                            request.getSession().setAttribute("user",list.get(0));
+                        }
+                    }
+                }
+            }
+        }
         return "index";
     }
 
-    @PostMapping("/login")
-    public String login(HttpServletRequest request){
+    @PostMapping("/campus")
+    public String login(HttpServletRequest request,HttpServletResponse response){
         String username=request.getParameter("username");
         String pwd=request.getParameter("password");
         String type=request.getParameter("type");
@@ -47,6 +64,7 @@ public class IndexController {
             Student stu=list.get(0);
             if( pwd.equals(stu.getPassword()) && type.equals(stu.getType().toString())){
                 request.getSession().setAttribute("user",stu);
+                response.addCookie(new Cookie("accountId",stu.getAccountId()));
             }else{
                 System.out.println("密码错误"+stu.getPassword()+stu.getType());
             }
@@ -60,6 +78,9 @@ public class IndexController {
     @GetMapping("/logout")
     public String callback(HttpServletRequest request, HttpServletResponse response){
         request.getSession().removeAttribute("user");
+        Cookie cookie=new Cookie("accountId",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
         return "redirect:/campus";
     }
 }

@@ -83,7 +83,7 @@
                                     <h4 class="modal-title" id="exampleModalLabel">密码修改</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form name = "editForm">
+                                    <form name = "editForm" method="post" action="/profile/info">
                                         <div class="form-group">
                                             <label for="oldpassword">原密码：</label>
                                             <input  type='password' id="oldpassword"  class="form-control" name="oldpassword" required placeholder="原密码">
@@ -100,7 +100,7 @@
                                             <div style="display: inline" id="tip3"></div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button onclick="submitPassword()" class="btn btn-primary" ng-disabled="editForm.$invalid">确定</button>
+                                            <button class="btn btn-primary" ng-disabled="editForm.$invalid">确定</button>
                                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                                         </div>
                                     </form>
@@ -113,53 +113,53 @@
                            style="width: 100%;height:100%;opacity: 0;position: absolute;left:0;top: 0;"/>-->
                 </div>
                 <div class="media-body">
-                    <form class="form-horizontal" method="post" href="/edit">
+                    <form class="form-horizontal" method="post" action="/profile/info">
                         <div class="form-group">
                             <label for="accountId" class="col-md-1 control-label">账号</label>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="accountId"  th:value="${session.user.getAccountId()}" readonly>
+                                <input type="text" class="form-control" id="accountId" name="accountId" th:value="${session.user.getAccountId()}" readonly>
                             </div>
                             <label for="degree" class="col-md-2 control-label">学位</label>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="degree" th:value="${session.user.getDegree()}">
+                                <input type="text" class="form-control" id="degree" name="degree" th:value="${session.user.getDegree()}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="nickname" class="col-md-1 control-label">昵称</label>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="nickname" th:value="${session.user.getNickname()}">
+                                <input type="text" class="form-control" id="nickname" name="nickname" th:value="${session.user.getNickname()}">
                             </div>
                             <label for="name" class="col-md-2 control-label">姓名</label>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="name" th:value="${session.user.getName()}" readonly>
+                                <input type="text" class="form-control" id="name" name="name" th:value="${session.user.getName()}" readonly>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="Email" class="col-md-1 control-label">邮箱</label>
+                            <label for="email" class="col-md-1 control-label">邮箱</label>
                             <div class="col-md-4">
-                                <input type="email" class="form-control" id="email" th:value="${session.user.getEmail()}" >
+                                <input type="email" class="form-control" id="email" name="email" th:value="${session.user.getEmail()}" >
                             </div>
                             <label for="phone" class="col-md-2 control-label">联系方式</label>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="phone">
+                                <input type="text" class="form-control" id="phone" name="phone" th:value="${session.user.getPhone()}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="dept" class="col-md-1 control-label">学院</label>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="dept" th:value="${session.user.getDept()}">
+                                <input type="text" class="form-control" id="dept" name="dept" th:value="${session.user.getDept()}">
                             </div>
                             <label for="major" class="col-md-2 control-label">所学专业</label>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="major" placeholder="major">
+                                <input type="text" class="form-control" id="major" name="major" th:value="${session.user.getMajor()}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="bio" class="col-md-1 control-label">简介</label>
                             <div class="col-md-10">
-                                <textarea id="bio" name="bio"  class="form-control" cols="30" rows="3"> </textarea>
+                                <textarea id="bio" name="bio"  class="form-control" cols="30" rows="3" th:text="${session.user.getBio()}"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -170,11 +170,49 @@
                     </form>
                 </div>
             </div>
-            <div th:if="${selectionName=='我的提问'}">
-                <div class="media-left">
+            <div th:if="${selectionName=='我的分享'}">
+                <div class="media" th:each="questionDTO: ${paginationDTO.questions}">
+                    <div class="media-left">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a th:href="@{'/question/'+${questionDTO.id}}" th:text="${questionDTO.title}"></a>
+                        </h4>
+                        <span th:text="${questionDTO.description}"></span> </br>
+                        <span class="desc" th:text="${questionDTO.commentCount}"></span><span class="desc">个回复 • </span>
+                        <span class="desc" th:text="${questionDTO.viewCount}"></span><span class="desc">次浏览 • </span>
+                        <span class="desc" th:text="${#dates.format(questionDTO.gmtCreate,'YYYY-MM-dd HH:mm')}"></span>
+                    </div>
+                    <hr>
                 </div>
-                <div class="media-body">
-                </div>
+
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li>
+                            <a th:href="@{'/profile/'+${selection}(page=1)}" aria-label="Previous">
+                                <span aria-hidden="true">首页</span>
+                            </a>
+                        </li>
+                        <li th:if="${paginationDTO.currentPage>1}">
+                            <a th:href="@{'/profile/'+${selection}(page=${paginationDTO.currentPage -1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li th:each="pagelist: ${paginationDTO.pageList}" th:class="${pagelist==paginationDTO.currentPage}?'active':''">
+                            <a th:href="@{'/profile/'+${selection}(page=${pagelist})}" th:text="${pagelist}"></a>
+                        </li>
+                        <li th:if="${paginationDTO.currentPage<paginationDTO.totalPage}">
+                            <a th:href="@{'/profile/'+${selection}(page=${paginationDTO.currentPage+1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{'/profile/'+${selection}(page=${paginationDTO.totalPage})}" aria-label="Next">
+                                <span aria-hidden="true">末页</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
@@ -184,7 +222,7 @@
                     个人信息
                 </a>
                 <a href="/profile/questions" class="list-group-item " th:classappend="${selection=='questions'}?'active':''">
-                   我的提问
+                   我的分享
                 </a>
                 <a href="/profile/replies" class="list-group-item" th:classappend="${selection=='replies'}?'active':''">
                     最新回复

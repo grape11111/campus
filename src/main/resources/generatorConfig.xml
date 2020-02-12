@@ -30,5 +30,6 @@
         </javaClientGenerator>
 
         <table  tableName="student" domainObjectName="Student" ></table>
+        <table  tableName="question" domainObjectName="Question" ></table>
     </context>
 </generatorConfiguration>
