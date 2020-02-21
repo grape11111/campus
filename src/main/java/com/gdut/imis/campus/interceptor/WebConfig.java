@@ -18,6 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         List<String> list=new ArrayList<>();
         list.add("/campus");
+        list.add("/register");
+        list.add("/logout");
         list.add("/js/**");
         list.add("/css/**");
         list.add("/fonts/**");

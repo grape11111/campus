@@ -34,16 +34,20 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">校园实习网</span>
-                    </button>
+                    <img th:src="${'/img/pic4.jpg'}"  alt="头像" class="logo">
                     <a class="navbar-brand" href="/campus">校园实习网</a>
                 </div>
 
+
+
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/campus">首页 <span class="sr-only">(current)</span></a></li>
+                        <li><a href="#">实习岗位</a></li>
+                    </ul>
                     <form class="navbar-form navbar-left">
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Search" style="width: 400px">
+                            <input type="text" class="form-control" placeholder="Search">
                         </div>
                         <button type="submit" class="btn btn-default">Submit</button>
                     </form>
@@ -130,26 +134,40 @@
                                         </div>
                                         <!--注册框中间部分(from表单)-->
                                         <div class="modal-body">
-                                            <form class="form-horizontal" role="form" action="/login" method="post">
+                                            <form class="form-horizontal" role="form" action="/register" method="post">
                                                 <!--统一社会信用代码-->
                                                 <div class="form-group">
-                                                    <label for="username" class="col-sm-2 control-label">统一社会信用代码</label>
+                                                    <label for="creditCode" class="col-sm-2 control-label">统一社会信用代码</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="xxx" name="username" placeholder="" required="required">
+                                                        <input type="text" class="form-control" id="creditCode" name="creditCode" placeholder="" required="required">
                                                     </div>
                                                 </div>
                                                 <!--企业全称-->
                                                 <div class="form-group">
-                                                    <label for="password" class="col-sm-2 control-label" >公司名称</label>
+                                                    <label for="company" class="col-sm-2 control-label" >公司名称</label>
                                                     <div class="col-sm-10">
-                                                        <input type="password" class="form-control" id="password2"  name="password" placeholder="" required="required">
+                                                        <input type="text" class="form-control" id="company"  name="company" placeholder="" required="required">
                                                     </div>
                                                 </div>
                                                 <!--注册人名称-->
                                                 <div class="form-group">
-                                                    <label for="password" class="col-sm-2 control-label" >注 册 人</label>
+                                                    <label for="hrName" class="col-sm-2 control-label" >注 册 人</label>
                                                     <div class="col-sm-10">
-                                                        <input type="password" class="form-control" id="xxxx"  name="password" placeholder="" required="required">
+                                                        <input type="text" class="form-control" id="hrName"  name="hrName" placeholder="" required="required">
+                                                    </div>
+                                                </div>
+                                                <!--注册人手机号码-->
+                                                <div class="form-group">
+                                                    <label for="phone" class="col-sm-2 control-label" >联系方式</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="phone"  name="phone" placeholder="" required="required">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="email" class="col-sm-2 control-label" >邮箱</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="email"  name="email" placeholder="" required="required">
                                                     </div>
                                                 </div>
                                                 <!--密码-->
@@ -176,7 +194,8 @@
                         <li class="dropdown" th:if="${session.user!=null}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                                aria-expanded="false">
-                                <span th:text="${session.user.getName()}"></span>
+                                <span th:if="${session.user.getType()==0}" th:text="${session.user.getName()}"></span>
+                                <span th:if="${session.user.getType()==2}" th:text="${session.user.getHrName()}"></span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">

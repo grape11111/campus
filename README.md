@@ -17,7 +17,8 @@
 
 [BootStrap](https://v3.bootcss.com/css/)
 
-[test API](D:\搜狗高速下载)
+[图片上传](https://www.jb51.net/article/146012.htm)
+
 
 ##SQL语句
 ```sql
