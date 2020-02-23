@@ -198,6 +198,31 @@
                     </form>
                 </div>
             </div>
+
+            <div th:if="${selectionName=='发布职位'}">
+                <div class="media" th:each="job: ${joblist}">
+                    <div class="media-left">
+                    </div>
+                    <div class="media-body">
+                        <form  method="post" action="/setStatus">
+                            <input type="text" id="id" name="id" th:value="${job.id}" hidden="hidden">
+                            <input type="text" id="status" name="status" th:value="${job.status}" hidden="hidden">
+                            <button type="submit" th:if="${job.status==1}" class="btn btn-primary" style="float:right;margin-left:5px">下线</button>
+                            <button type="submit" th:if="${job.status==0}" class="btn btn-primary" style="float:right;margin-left:5px">上线</button>
+                        </form>
+                        <a class="btn btn-primary" th:href="@{'/deleteJob/'+${job.id}}" role="button" style="float:right">删除</a>
+                        <h4 class="media-heading">
+                            <a th:href="@{'/job/'+${job.id}}" th:text="${job.name}"></a>
+                        </h4>
+
+                        </br>
+                        <span class="desc" th:text="${job.viewCount}"></span><span class="desc">次浏览 • </span>
+                        <span class="desc" th:text="${#dates.format(job.gmtCreate,'YYYY-MM-dd HH:mm')}"></span>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+
         </div>
 
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">

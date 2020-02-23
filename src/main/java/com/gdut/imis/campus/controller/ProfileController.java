@@ -3,8 +3,11 @@ package com.gdut.imis.campus.controller;
 import com.gdut.imis.campus.dataobject.PaginationDTO;
 import com.gdut.imis.campus.dataobject.QuestionDTO;
 import com.gdut.imis.campus.model.Enterprise;
+import com.gdut.imis.campus.model.Job;
+import com.gdut.imis.campus.model.JobWithBLOBs;
 import com.gdut.imis.campus.model.Student;
 import com.gdut.imis.campus.service.EnterpriseService;
+import com.gdut.imis.campus.service.JobService;
 import com.gdut.imis.campus.service.QuestionService;
 import com.gdut.imis.campus.service.StudentService;
 import com.github.pagehelper.PageHelper;
@@ -32,6 +35,9 @@ public class ProfileController {
 
     @Autowired
     private EnterpriseService enterpriseService;
+
+    @Autowired
+    private JobService jobService;
 
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name="action")String action, HttpServletRequest request, Model model,
@@ -64,6 +70,9 @@ public class ProfileController {
             model.addAttribute("selectionName","我关注的话题");
         }
         else if("jobs".equals(action)) {
+            Enterprise user=(Enterprise)request.getSession().getAttribute("user");
+            List<JobWithBLOBs> joblist= jobService.listByEntId(user.getId());
+            model.addAttribute("joblist", joblist);
             model.addAttribute("selection", action);
             model.addAttribute("selectionName","发布职位");
             return "profileEnt";

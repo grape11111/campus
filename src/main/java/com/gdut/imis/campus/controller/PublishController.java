@@ -1,8 +1,11 @@
 package com.gdut.imis.campus.controller;
 
 import com.gdut.imis.campus.dataobject.QuestionDTO;
+import com.gdut.imis.campus.model.Enterprise;
+import com.gdut.imis.campus.model.JobWithBLOBs;
 import com.gdut.imis.campus.model.Question;
 import com.gdut.imis.campus.model.Student;
+import com.gdut.imis.campus.service.JobService;
 import com.gdut.imis.campus.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +23,9 @@ public class PublishController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private JobService jobService;
+
     @GetMapping("/publish/{id}")
     public String publish(@PathVariable(name="id")Integer id, Model model){
         QuestionDTO questionDTO=questionService.getById(id);
@@ -31,10 +37,17 @@ public class PublishController {
     }
 
     @GetMapping("/publish")
-    public String getPublish(){
-        return "publish";
+    public String getPublish(HttpServletRequest request){
+        if(request.getSession().getAttribute("type").toString().equals("2")){
+            return "publishEnt";
+        }else {
+            return "publish";
+        }
     }
 
+    /**
+     * 学生分享问题
+     * */
     @PostMapping("/publish")
     public String doPubilsh(
             @RequestParam(value="title",required = false) String title,
@@ -76,7 +89,91 @@ public class PublishController {
         question.setTag(tag);
         question.setCreator(user.getAccountId());
         questionService.createOrUpdate(question);
-        return "redirect:/";
+        return "redirect:/profile/questions";
     }
+
+
+    /**
+     * 修改某一职位信息
+     * @param id--某一职位id
+     * @param model
+     * @return
+     */
+    @GetMapping("/publishEnt/{id}")
+    public String publishEnt(@PathVariable(name="id")Integer id, Model model){
+        JobWithBLOBs job=jobService.getById(id);
+        model.addAttribute("name", job.getName());
+        model.addAttribute("degree", job.getDegree());
+        model.addAttribute("LowSalary",job.getLowSalary());
+        model.addAttribute("HighSalary",job.getHighSalary());
+        model.addAttribute("GmtInvalid",job.getGmtInvalid());
+        model.addAttribute("content",job.getContent());
+        model.addAttribute("requirement",job.getRequirement());
+        model.addAttribute("id", id);
+        return "publishEnt";
+    }
+
+    /**
+     * 企业用户发布或者修改职位
+     * */
+    @PostMapping("/publishEnt")
+    public String doPublishJob(@RequestParam(value="name") String name,
+                               @RequestParam(value="degree") String degree,
+                               @RequestParam(value="LowSalary") String LowSalary,
+                               @RequestParam(value="HighSalary") String HighSalary,
+                               @RequestParam(value="GmtInvalid") String GmtInvalid,
+                               @RequestParam(value = "content") String content,
+                               @RequestParam(value="requirement") String requirement,
+                               @RequestParam(value="id") String id,
+                               HttpServletRequest request,
+                               Model model){
+
+        JobWithBLOBs job = new JobWithBLOBs();
+        if(id!=null){
+            job.setId(Integer.parseInt(id));
+        }
+        job.setName(name);
+        job.setDegree(degree);
+        job.setLowSalary(Integer.parseInt(LowSalary));
+        job.setHighSalary(Integer.parseInt(HighSalary));
+        job.setGmtInvalid(GmtInvalid);
+        job.setContent(content);
+        job.setRequirement(requirement);
+        Enterprise ent = (Enterprise) request.getSession().getAttribute("user");
+        job.setEnterpriseId(ent.getId());
+        job.setEnterpriseName(ent.getCompany());
+        job.setEnterpriseLogo(ent.getAvatarUrl());
+
+        jobService.createOrUpdate(job);
+        return "redirect:/profile/jobs";
+    }
+
+
+    /**
+     * 修改职位状态：0-下线  1-上线
+     * @param id
+     * @param status
+     * @param request
+     * @param model
+     * @return
+     */
+    @PostMapping("/setStatus")
+    public String doSetStatus(@RequestParam(value="id") String id,
+                               @RequestParam(value="status") String status,
+                               HttpServletRequest request,
+                               Model model){
+
+            JobWithBLOBs job=new JobWithBLOBs();
+            job.setId(Integer.parseInt(id));
+            int temp=Integer.parseInt(status);
+            if(temp==1){
+                job.setStatus(0);
+            }else{
+                job.setStatus(1);
+            }
+            jobService.createOrUpdate(job);
+            return"redirect:/profile/jobs";
+    }
+
 }
 

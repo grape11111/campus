@@ -2,10 +2,8 @@ package com.gdut.imis.campus.controller;
 
 import com.gdut.imis.campus.mapper.EnterpriseMapper;
 import com.gdut.imis.campus.mapper.StudentMapper;
-import com.gdut.imis.campus.model.Enterprise;
-import com.gdut.imis.campus.model.EnterpriseExample;
-import com.gdut.imis.campus.model.Student;
-import com.gdut.imis.campus.model.StudentExample;
+import com.gdut.imis.campus.model.*;
+import com.gdut.imis.campus.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,13 +26,16 @@ public class IndexController {
     @Autowired
     private EnterpriseMapper enterpriseMapper;
 
+    @Autowired
+    private JobService jobService;
+
     @GetMapping("/")
     public String test(HttpServletRequest request){
         return "index";
     }
 
     @GetMapping("/campus")
-    public String index(HttpServletRequest request){
+    public String index(HttpServletRequest request,Model model){
         Cookie[]cookies=request.getCookies();
         if (cookies!=null&&cookies.length!=0) {
             for (Cookie cookie : cookies) {
@@ -61,6 +62,8 @@ public class IndexController {
                 }
             }
         }
+        List<JobWithBLOBs> joblist= jobService.list();
+        model.addAttribute("joblist", joblist);
         return "index";
     }
 

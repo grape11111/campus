@@ -24,6 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
         list.add("/css/**");
         list.add("/fonts/**");
         list.add("/img/**");
+        list.add("/photos/**");
         list.add("/static/**");
         registry.addInterceptor(sessionInterceptor).addPathPatterns("/**").excludePathPatterns(list);
     }

@@ -55,7 +55,8 @@
 
                     <ul class="nav navbar-nav navbar-right">
                         <li th:if="${session.user!=null}">
-                            <a href="/publish">分享</a>
+                            <a th:if="${session.user.getType()==0}" th:text="分享" href="/publish"></a>
+                            <a th:if="${session.user.getType()==2}" th:text="发布职位" href="/publish"></a>
                         </li>
                         <li th:if="${session.user==null}">
                             <button type="submit" class="btn btn-primary btn-login" data-toggle="modal" data-target="#myModal">
