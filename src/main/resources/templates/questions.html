@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title >分享交流区</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
+
+    <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body>
+<div th:insert="~{navigation :: nav}"></div>
+
+<div class="container-fluid main-index">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp发现</h2>
+            <hr>
+            <div class="media" th:each="questionDTO: ${paginationDTO.questions}">
+                <div class="media-left">
+                    <a href="">
+                        <img class="media-object img-rounded media-object" th:src="${questionDTO.user.avatarUrl}"  alt="头像">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">
+                        <a th:href="@{'/question/'+${questionDTO.id}}" th:text="${questionDTO.title}"></a>
+                    </h4>
+                    <span th:text="${questionDTO.description}"></span> </br>
+                    <span class="desc" th:text="${questionDTO.commentCount}"></span><span class="desc">个回复 • </span>
+                    <span class="desc" th:text="${questionDTO.viewCount}"></span><span class="desc">次浏览 • </span>
+                    <span class="desc" th:text="${#dates.format(questionDTO.gmtCreate,'YYYY-MM-dd HH:mm')}"></span>
+                </div>
+                <hr>
+            </div>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a href="/questions?page=1" aria-label="Previous">
+                            <span aria-hidden="true">首页</span>
+                        </a>
+                    </li>
+                    <li th:if="${paginationDTO.currentPage>1}">
+                        <a th:href="@{/questions/(page=${paginationDTO.currentPage -1})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:each="pagelist: ${paginationDTO.pageList}" th:class="${pagelist==paginationDTO.currentPage}?'active':''">
+                        <a th:href="@{/questions/(page=${pagelist})}" th:text="${pagelist}"></a>
+                    </li>
+                    <li th:if="${paginationDTO.currentPage<paginationDTO.totalPage}">
+                        <a th:href="@{/questions/(page=${paginationDTO.currentPage+1})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/questions/(page=${paginationDTO.totalPage})}" aria-label="Next">
+                            <span aria-hidden="true">末页</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h2>热门问题</h2>
+            <br>
+            <table class="table table-striped">
+                <th>问题</th><th>浏览数</th>
+                <tr class="tr_node"  th:each="question: ${listByCount}">
+                    <!--动态载入数据-->
+                    <td><a style="text-decoration:none" th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a></td>
+                    <td ><span class="label label-info" th:text="${question.viewCount}"></span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

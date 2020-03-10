@@ -9,6 +9,47 @@
 
     <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script>
+        function Juge(myform){
+            if (myform.name.value == ""){
+                alert("请输入用户名!");myform.name.focus();
+                return false;
+            }
+            if (myform.degree.value == ""){
+                alert("请输入学历要求!");myform.degree.focus();
+                return false;
+            }
+            if (myform.LowSalary.value == ""){
+                alert("请输入薪酬范围!");myform.LowSalary.focus();
+                return false;
+            }
+            if (myform.HighSalary.value == ""){
+                alert("请输入薪酬范围!");myform.HighSalary.focus();
+                return false;
+            }
+            if (myform.GmtInvalid.value == ""){
+                alert("请输入失效日期!");myform.GmtInvalid.focus();
+                return false;
+            }
+            if (myform.type.value == ""){
+                alert("请输入职位类别!");myform.type.focus();
+                return false;
+            }
+            if (myform.WorkDays.value == ""){
+                alert("请输入工作天数!");myform.WorkDays.focus();
+                return false;
+            }
+            if (myform.content.value == ""){
+                alert("请输入工作内容!");myform.content.focus();
+                return false;
+            }
+            if (myform.requirement.value == ""){
+                alert("请输入工作要求!");myform.requirement.focus();
+                return false;
+            }
+        }
+    </script>
+
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -19,7 +60,7 @@
             <h2><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;发布职位</h2>
             <hr>
 
-            <form class="form-horizontal" method="post" action="/publishEnt">
+            <form class="form-horizontal" method="post" action="/publishEnt" onsubmit="return Juge(this)">
                 <input type="text" id="id" name="id" th:value="${id}" hidden="hidden">
                 <div class="form-group">
                     <label for="name" class="col-md-2 control-label">职位名称</label>
@@ -42,6 +83,41 @@
                     <label for="GmtInvalid" class="col-md-2 control-label">失效日期</label>
                     <div class="col-md-4">
                         <input type="date" class="form-control" id="GmtInvalid" name="GmtInvalid" th:value="${GmtInvalid}" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="type" class="col-md-2 control-label">职业类别</label>
+                    <div class="col-md-4">
+                        <select id="type" name="type" class="form-control" size="1">
+                            <option value="" disabled selected>--请选择--</option>
+                            <option value="计算机/网络/技术类">计算机/网络/技术类</option>
+                            <option value="电子/电器/通信技术类">电子/电器/通信技术类</option>
+                            <option value="行政后勤类">行政后勤类</option>
+                            <option value="翻译类">翻译类</option>
+                            <option value="销售类">销售类</option>
+                            <option value="咨询/顾问类">咨询/顾问类</option>
+                            <option value="财务/审计/统计类">财务/审计/统计类</option>
+                            <option value="人力资源类">人力资源类</option>
+                            <option value="金融保险类">金融保险类</option>
+                            <option value="法律类">法律类</option>
+                            <option value="生物/制药/化工/环保类">生物/制药/化工/环保类</option>
+                            <option value="科研类">科研类</option>
+                            <option value="医疗卫生/美容保健类">医疗卫生/美容保健类</option>
+                            <option value="教育/培训类">教育/培训类</option>
+                            <option value="其他类">其他类</option>
+                        </select>
+                    </div>
+                    <label for="WorkDays" class="col-md-2 control-label">每周几天</label>
+                    <div class="col-md-2">
+                        <select id="WorkDays" name="WorkDays" class="form-control" size="1">
+                            <option value="" disabled selected>--请选择--</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">

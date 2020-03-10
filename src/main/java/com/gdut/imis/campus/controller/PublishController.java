@@ -37,7 +37,8 @@ public class PublishController {
     }
 
     @GetMapping("/publish")
-    public String getPublish(HttpServletRequest request){
+    public String getPublish(HttpServletRequest request,Model model){
+        model.addAttribute("option","publish");
         if(request.getSession().getAttribute("type").toString().equals("2")){
             return "publishEnt";
         }else {
@@ -109,6 +110,8 @@ public class PublishController {
         model.addAttribute("GmtInvalid",job.getGmtInvalid());
         model.addAttribute("content",job.getContent());
         model.addAttribute("requirement",job.getRequirement());
+        model.addAttribute("type",job.getType());
+        model.addAttribute("WorkDays",job.getWorkDays());
         model.addAttribute("id", id);
         return "publishEnt";
     }
@@ -125,11 +128,13 @@ public class PublishController {
                                @RequestParam(value = "content") String content,
                                @RequestParam(value="requirement") String requirement,
                                @RequestParam(value="id") String id,
+                               @RequestParam(value="type") String type,
+                               @RequestParam(value="WorkDays") String WorkDays,
                                HttpServletRequest request,
                                Model model){
 
         JobWithBLOBs job = new JobWithBLOBs();
-        if(id!=null){
+        if(id!=""){
             job.setId(Integer.parseInt(id));
         }
         job.setName(name);
@@ -139,10 +144,13 @@ public class PublishController {
         job.setGmtInvalid(GmtInvalid);
         job.setContent(content);
         job.setRequirement(requirement);
+        job.setType(type);
+        job.setWorkDays(Integer.parseInt(WorkDays));
         Enterprise ent = (Enterprise) request.getSession().getAttribute("user");
         job.setEnterpriseId(ent.getId());
         job.setEnterpriseName(ent.getCompany());
         job.setEnterpriseLogo(ent.getAvatarUrl());
+
 
         jobService.createOrUpdate(job);
         return "redirect:/profile/jobs";

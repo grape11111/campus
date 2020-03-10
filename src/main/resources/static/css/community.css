@@ -70,3 +70,14 @@ body{
 }
 
 
+.nav li{
+    font-size:15px;
+}
+
+.nav li.current{
+    border-bottom: 3px solid #3277b2;
+    font-weight: 600;
+}
+
+
+

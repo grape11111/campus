@@ -1,15 +1,23 @@
 package com.gdut.imis.campus.controller;
 
 
+import com.gdut.imis.campus.dataobject.PaginationDTO;
 import com.gdut.imis.campus.dataobject.QuestionDTO;
 import com.gdut.imis.campus.model.JobWithBLOBs;
+import com.gdut.imis.campus.model.Question;
 import com.gdut.imis.campus.service.JobService;
 import com.gdut.imis.campus.service.QuestionService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class QuestionController {
@@ -28,6 +36,32 @@ public class QuestionController {
         }
         model.addAttribute("questionDTO",questionDTO);
         return "question";
+    }
+
+    @GetMapping("/questions")
+    public  String index(HttpServletRequest request, Model model,
+                         @RequestParam(name="page",defaultValue = "1")Integer page,
+                         @RequestParam(name="size",defaultValue = "5")Integer size
+    ){
+        PageHelper.startPage(page,size);
+        List<QuestionDTO> questionlist= questionService.list();
+        PaginationDTO paginationDTO= new PaginationDTO();
+        paginationDTO.setQuestions(questionlist);
+        Integer totalCount=questionService.count();
+        paginationDTO.setPagination(totalCount,size,page);
+        List<Question> listByCount= questionService.listByViewcount();
+        model.addAttribute("listByCount", listByCount);
+        model.addAttribute("paginationDTO", paginationDTO);
+        model.addAttribute("option","questions");
+        return "questions";
+    }
+
+    @GetMapping("/jobs")
+    public String listjobs(HttpServletRequest request,Model model) {
+        model.addAttribute("option","jobs");
+        List<JobWithBLOBs> joblist= jobService.list();
+        model.addAttribute("joblist", joblist);
+        return "jobs";
     }
 
 
@@ -51,6 +85,31 @@ public class QuestionController {
     public String deleteJob(@PathVariable(name="id")Integer id){
         jobService.delete(id);
         return"redirect:/profile/jobs";
+    }
+
+    @ResponseBody
+    @PostMapping("/search")
+    public Map<String,Object> selectByCondition(HttpServletRequest request, Model model){
+        String days=request.getParameter("days");
+        String degree=request.getParameter("degree");
+        String type=request.getParameter("type");
+        int workDays=0;
+        if(days!="" && days!=null) {
+            workDays = Integer.parseInt(days.substring(0, 1));
+        }
+        List<JobWithBLOBs> joblist=jobService.selectByCondition(workDays,type,degree);
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+
+        resultMap.put("result",joblist);
+        return resultMap;
+    }
+
+    @GetMapping("/search")
+    public String getByName(HttpServletRequest request, Model model){
+        String name=request.getParameter("name");
+        List<JobWithBLOBs> joblist=jobService.selectByName(name);
+        model.addAttribute("joblist",joblist);
+        return "jobs";
     }
 
 }

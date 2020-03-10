@@ -63,7 +63,10 @@ public class IndexController {
             }
         }
         List<JobWithBLOBs> joblist= jobService.list();
+        List<JobWithBLOBs> listByCount= jobService.listByViewcount();
         model.addAttribute("joblist", joblist);
+        model.addAttribute("listByCount", listByCount);
+        model.addAttribute("option","index");
         return "index";
     }
 
@@ -111,6 +114,11 @@ public class IndexController {
                 return "error";
             }
         }
+        model.addAttribute("option","index");
+        List<JobWithBLOBs> joblist= jobService.list();
+        List<JobWithBLOBs> listByCount= jobService.listByViewcount();
+        model.addAttribute("joblist", joblist);
+        model.addAttribute("listByCount", listByCount);
         return "index";
     }
 

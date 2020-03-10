@@ -83,6 +83,35 @@
             reader.readAsDataURL(file);
         }
     </script>
+    <script>
+        function Juge(myform){
+            if (myform.degree.value == ""){
+                alert("请输入学历!");myform.degree.focus();
+                return false;
+            }
+            if (myform.nickname.value == ""){
+                alert("请输入昵称!");myform.nickname.focus();
+                return false;
+            }
+            if (myform.email.value == ""){
+                alert("请输入邮箱地址!");myform.email.focus();
+                return false;
+            }
+            if (myform.phone.value == ""){
+                alert("请输入联系方式!");myform.phone.focus();
+                return false;
+            }
+            if (myform.dept.value == ""){
+                alert("请输入所属学院!");myform.dept.focus();
+                return false;
+            }
+            if (myform.major.value == ""){
+                alert("请输入所学专业!");myform.major.focus();
+                return false;
+            }
+        }
+    </script>
+
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -145,7 +174,7 @@
                            style="width: 100%;height:100%;opacity: 0;position: absolute;left:0;top: 0;"/>-->
                 </div>
                 <div class="media-body">
-                    <form class="form-horizontal" method="post" action="/profile/info">
+                    <form class="form-horizontal" method="post" action="/profile/info" onsubmit="return Juge(this)">
                         <div class="form-group">
                             <label for="accountId" class="col-md-1 control-label">账号</label>
                             <div class="col-md-4">
@@ -246,6 +275,31 @@
                     </ul>
                 </nav>
             </div>
+
+            <div th:if="${selectionName=='个人简历'}">
+               <h3 style="color: #3072ab"><span class="glyphicon glyphicon-bookmark"></span>&nbsp 基本信息</h3>
+                <br>
+                <table class="table">
+                    <tr>
+                        <td style="color: #3072ab"><span class="glyphicon glyphicon-user"></span> 姓名</td><td th:text="${session.user.getName()}"></td>
+                        <td style="color: #3072ab"><span class="glyphicon glyphicon-calendar"></span> 出生年月</td><td th:text="${#dates.format(session.user.getBirth(),'YYYY-MM-dd')}"></td>
+                    </tr>
+                    <tr>
+                        <td style="color: #3072ab"><span class="glyphicon glyphicon-envelope"></span> 邮箱</td><td th:text="${session.user.getEmail()}"></td>
+                        <td style="color: #3072ab"><span class="glyphicon glyphicon-phone"></span> 联系方式</td><td th:text="${session.user.getPhone()}"></td>
+                    </tr>
+                    <tr>
+                        <td style="color: #3072ab"><span class="glyphicon glyphicon-th-large"></span> 学历</td><td th:text="${session.user.getDegree()}"></td>
+                        <td style="color: #3072ab"><span class="glyphicon glyphicon-star"></span> 专    业</td><td th:text="${session.user.getMajor()}"></td>
+                    </tr>
+                    <tr>
+                        <td style="color: #3072ab"><span class="glyphicon glyphicon-home"></span> 地址</td><td colspan="3" th:text="${session.user.getAddress()}" style="column-span: 3"></td>
+                    </tr>
+                </table>
+                <h3 style="color: #3072ab;top: 5px"><span class="glyphicon glyphicon-tasks"></span>&nbsp 项目经历</h3>
+                <h3 style="color: #3072ab;top: 5px"><span class="glyphicon glyphicon-tasks"></span>&nbsp 项目经历</h3>
+                <br>
+            </div>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3></h3>
@@ -256,8 +310,8 @@
                 <a href="/profile/questions" class="list-group-item " th:classappend="${selection=='questions'}?'active':''">
                    我的分享
                 </a>
-                <a href="/profile/replies" class="list-group-item" th:classappend="${selection=='replies'}?'active':''">
-                    最新回复
+                <a href="/profile/resume" class="list-group-item" th:classappend="${selection=='resume'}?'active':''">
+                    个人简历
                     <span class="badge">14</span>
                 </a>
                 <a href="/profile/liking" class="list-group-item" th:classappend="${selection=='liking'}?'active':''">我关注的话题</a>

@@ -26,18 +26,51 @@ public class JobService {
     }
 
     /**
-     * 条件查询
+     * 单条件查询，按职位名
      * @param condition
      * @return
      */
     public List<JobWithBLOBs> listByCondition(String condition) {
         JobExample jobExample = new JobExample();
         String s="%"+condition+"%";
-//        jobExample.createCriteria().andTitleLike(s);
-//        List<Question> questionlist=questionMapper.selectByExample(questionExample);
-//        List<QuestionDTO> questionDTOList=new ArrayList<QuestionDTO>();
-//        this.copyProperties(questionlist,questionDTOList);
-        return null;
+        jobExample.createCriteria().andNameLike(s);
+        List<JobWithBLOBs> joblist=jobMapper.selectByExampleWithBLOBs(jobExample);
+        return joblist;
+    }
+
+    /**
+     *
+     * @param days
+     * @param type
+     * @param degree
+     *
+     * @return
+     */
+    public List<JobWithBLOBs> selectByCondition(int days,String type,String degree) {
+        JobExample jobExample = new JobExample();
+        JobExample.Criteria createria=jobExample.createCriteria();
+        if (days!=0){
+            createria.andWorkDaysEqualTo(days);
+        }
+        if(type!="" && type!=null){
+            createria.andTypeEqualTo(type);
+        }
+        if(degree!="" && degree!=null){
+            createria.andDegreeEqualTo(degree);
+        }
+//        if(name!="" && name!=null){
+//            createria.andNameLike("%"+name+"%");
+//        }
+        List<JobWithBLOBs> joblist=jobMapper.selectByExampleWithBLOBs(jobExample);
+        return joblist;
+    }
+
+    public List<JobWithBLOBs> selectByName(String name){
+        JobExample jobExample = new JobExample();
+        JobExample.Criteria createria=jobExample.createCriteria();
+        createria.andNameLike("%"+name+"%");
+        List<JobWithBLOBs> joblist=jobMapper.selectByExampleWithBLOBs(jobExample);
+        return joblist;
     }
 
 
@@ -107,5 +140,20 @@ public class JobService {
 
     public void delete(Integer id){
         jobMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     *
+     * @return
+     */
+
+    public List<JobWithBLOBs> listByViewcount(){
+        JobExample jobExample=new JobExample();
+        jobExample.setOrderByClause("`view_count` DESC");
+        List<JobWithBLOBs> listByCount=jobMapper.selectByExampleWithBLOBs(jobExample);
+        if(listByCount.size()>8){
+            listByCount=listByCount.subList(0, 7);
+        }
+        return listByCount;
     }
 }

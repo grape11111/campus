@@ -55,7 +55,7 @@ public class SessionInterceptor implements HandlerInterceptor {
                 }
             }
         }
-        response.addCookie(new Cookie("error", "用户未登录"));
+          response.sendError(HttpServletResponse.SC_FORBIDDEN,"用户未登录");
         return false;
     }
 

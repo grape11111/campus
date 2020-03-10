@@ -1,0 +1,258 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="实习岗位信息"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
+
+    <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <style>
+        .select{width:50%;font-size: 15px;border-radius:5px;padding:5px 10px;}
+        .select li{padding:10px 0 5px 50px;list-style: none;}
+        .select .select-list{list-style:none;height: 50px;width: 1000px;}
+        .select dl{position:relative;line-height:24px;}
+        .select dl:after{content:" ";display:block;clear:both;height:0;overflow:hidden}
+        .select dt{width:100px;margin-bottom:5px;position:absolute;top:0;left:-100px;text-align:right;color:#777;height:24px;line-height:24px}
+        .select dd{display:inline;margin:0 0 5px 5px;}
+        .select a{display:inline-block;white-space:nowrap;height:24px;padding:0 10px;text-decoration:none;color:#777;border-radius:2px;}
+        .select a:hover{color:#fff;background-color:#3d82bd;}
+        .select .selected a{color:#fff;background-color:#3d82bd;}
+        .select-result dt{font-weight:bold;height: 50px;}
+        .select-no{color:#777;}
+        .select .select-result a{padding-right:20px;
+            background: #3d82bd url(/img/close.gif) no-repeat right 9px;
+        }
+        .select .select-result a:hover{background-position:right -15px;}
+    </style>
+    <script>
+        var query1=null;
+        var query2=null;
+        var query3=null;
+        //var query4=$("#search").val()
+        $(document).ready(function() {
+            $("#select1 dd").click(function () {
+                $(this).addClass("selected").siblings().removeClass("selected");
+                if ($(this).hasClass("select-all")) {
+                    $("#selectA").remove();
+                } else {
+                    var copyA = $(this).clone();
+                    if ($("#selectA").length > 0) {
+                        $("#selectA a").html($(this).text());
+                        query1=document.getElementById("selectA").innerText;
+                        searchByCondition(query1,query2,query3);
+                    } else {
+                        $(".select-result dl").append(copyA.attr("id", "selectA"));
+                        query1=document.getElementById("selectA").innerText;
+                        searchByCondition(query1,query2,query3);
+                    }
+                }
+            })
+            $("#select2 dd").click(function () {
+                $(this).addClass("selected").siblings().removeClass("selected");
+                if ($(this).hasClass("select-all")) {
+                    $("#selectB").remove();
+                } else {
+                    var copyB = $(this).clone();
+                    if ($("#selectB").length > 0) {
+                        $("#selectB a").html($(this).text());
+                        query2=document.getElementById("selectB").innerText;
+                        searchByCondition(query1,query2,query3);
+                    } else {
+                        $(".select-result dl").append(copyB.attr("id", "selectB"));
+                        query2=document.getElementById("selectB").innerText;
+                        searchByCondition(query1,query2,query3);
+                    }
+                }
+            })
+            $("#select3 dd").click(function () {
+                $(this).addClass("selected").siblings().removeClass("selected");
+                if ($(this).hasClass("select-all")) {
+                    $("#selectC").remove();
+                } else {
+                    var copyC = $(this).clone();
+                    if ($("#selectC").length > 0) {
+                        $("#selectC a").html($(this).text());
+                        query3=document.getElementById("selectC").innerText;
+                        searchByCondition(query1,query2,query3);
+                    } else {
+                        $(".select-result dl").append(copyC.attr("id", "selectC"));
+                        query3=document.getElementById("selectC").innerText;
+                        searchByCondition(query1,query2,query3);
+                    }
+                }
+            })
+            $(document).on("click","#selectA",function(){
+                $(this).remove();
+                $("#select1 .select-all").addClass("selected").siblings().removeClass("selected");
+                query1=null
+                searchByCondition(query1,query2,query3);
+            })
+            $(document).on("click","#selectB",function(){
+                $(this).remove();
+                $("#select2 .select-all").addClass("selected").siblings().removeClass("selected");
+                query2=null
+                searchByCondition(query1,query2,query3);
+            })
+            $(document).on("click","#selectC",function(){
+                $(this).remove();
+                $("#select3 .select-all").addClass("selected").siblings().removeClass("selected");
+                query3=null
+                searchByCondition(query1,query2,query3);
+            })
+            $(document).on("click",".select dd",function () {
+                if ($(".select-result dd").length > 1) {
+                    $(".select-no").hide();
+                } else {
+                    $(".select-no").show();
+                }
+            });
+        });
+
+
+        function searchByCondition(query1,query2,query3){
+                        var detal=JSON.stringify({"days":query1,"degree":query2,"style":query3})
+                        $.ajax({
+                            type : 'post',
+                            url : 'search',
+                            cache : false, // 禁用缓存
+                            data :{
+                                "days":query1,
+                                "degree":query2,
+                                "type":query3
+                            } ,
+
+                            success : function(data) {
+                                $(".media").hide();
+                                //取出后端传过来的list值
+                                var temp = JSON.stringify(data.result)
+                                //JSON数组字符串 转换成 JSON数组
+                                var res=$.parseJSON(temp);
+                    $('.table').empty()
+                    var jobs="<table id='table' class='table'>"
+                    $.each(res,function(index,value) {
+
+                        var newtime=gettime(value.gmtCreate)
+                            jobs = jobs+"<tr><td>"
+                                    +"<img class='media-object img-rounded media-object' style='float:left;margin-right:40px' id='img' src="+value.enterpriseLogo+" >"
+                                    +"<h4 class='media-heading'>"
+                                    +"<a style='text-decoration:none' href='/job/"+value.id+"'>"+value.name+"</a>"
+                                    +"</h4>"
+                                    +"<span class='desc'>"+value.workDays+"</span><span class='desc'>天/周 | </span>"
+                                    +"<span class='desc'>"+value.degree+"</span><span class='desc'> | </span>"
+                                    +"<span class='desc'>"+newtime+"</span>"
+                                    +"</td>"
+                                    +"<td></td>"
+                                    +"<td> <a class='btn btn-primary' href='/job/"+value.id+"' role='button' style='float:right'>查看详情</a> </td>"
+                                    +"</tr>"
+                    })
+                    //将要展示的信息写入页面
+                    jobs=jobs+"</table>"
+                    var rowTr=document.getElementById("jobs");
+                    rowTr.innerHTML = jobs
+                    //将信息追加
+                    $(".jobs").append(rowTr)
+                }
+
+            });
+
+        }
+        function gettime(t){
+            var _time=new Date(t);
+            var   year=_time.getFullYear();//2017
+            var   month=_time.getMonth()+1;//7
+            var   date=_time.getDate();//10
+            var   hour=_time.getHours();//10
+            var   minute=_time.getMinutes();//56
+            return   year+"-"+month+"-"+date+" "+hour+":"+minute;//这里自己按自己需要的格式拼接
+        }
+    </script>
+</head>
+<body>
+<div th:insert="~{navigation :: nav}">
+
+</div>
+
+<div class="container-fluid main-index">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div id="wrap">
+                <ul class="select">
+                    <li class="select-list">
+                        <dl id="select1">
+                            <dt>每周几天:</dt>
+                            <dd class="select-all selected"><a href="#">不限</a></dd>
+                            <dd><a href="#">1天</a></dd>
+                            <dd><a href="#" >2天</a></dd>
+                            <dd><a href="#">3天</a></dd>
+                            <dd><a href="#">4天</a></dd>
+                            <dd><a href="#">5天</a></dd>
+                        </dl>
+                    </li>
+                    <li class="select-list">
+                        <dl id="select2">
+                            <dt>学历要求:</dt>
+                            <dd class="select-all selected"><a href="#">不限</a></dd>
+                            <dd><a href="#">大专</a></dd>
+                            <dd><a href="#">本科</a></dd>
+                            <dd><a href="#">硕士</a></dd>
+                            <dd><a href="#">博士</a></dd>
+                        </dl>
+                    </li>
+                    <li class="select-list">
+                        <dl id="select3">
+                            <dt>职业类别:</dt>
+                            <dd class="select-all selected"><a href="#">全部</a></dd>
+                            <dd><a href="#">计算机/网络/技术类</a></dd>
+                            <dd><a href="#">电子/电器/通信技术类</a></dd>
+                            <dd><a href="#">行政后勤类</a></dd>
+                            <dd><a href="#">翻译类</a></dd>
+                            <dd><a href="#">销售类</a></dd>
+                            <dd><a href="#">咨询/顾问类</a></dd>
+                            <dd><a href="#">财务/审计/统计类</a></dd>
+                            <dd><a href="#">人力资源类</a></dd>
+                            <dd><a href="#">金融保险类</a></dd>
+                            <dd><a href="#">法律类</a></dd>
+                            <dd><a href="#">生物/制药/化工/环保类</a></dd>
+                            <dd><a href="#">科研类</a></dd>
+                            <dd><a href="#">医疗卫生/美容保健类</a></dd>
+                            <dd><a href="#">教育/培训类</a></dd>
+                            <dd><a href="#">其他类</a></dd>
+                        </dl>
+                    </li>
+                    <li class="select-result">
+                        <dl>
+                            <dt>已选条件:</dt>
+                            <dd class="select-no">暂时没有选择过滤条件</dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="jobs">
+            <table id="table" class="table">
+                <tr class="tr_node"  th:each="job: ${joblist}">
+                    <!--动态载入数据-->
+                    <td>
+                        <img class="media-object img-rounded media-object" style="float:left;margin-right:40px" id="img" th:src="@{${job.enterpriseLogo}}" onerror="this.src='/img/pic2.jpg'" alt="头像">
+                        <h4 class="media-heading">
+                            <a style="text-decoration:none" th:href="@{'/job/'+${job.id}}" th:text="${job.name}"></a>
+                        </h4>
+                        <span class="desc" th:text="${job.workDays}"></span><span class="desc">天/周 | </span>
+                        <span class="desc" th:text="${job.degree}"></span><span class="desc"> | </span>
+                        <span class="desc" th:text="${#dates.format(job.gmtCreate,'YYYY-MM-dd HH:mm')}"></span>
+                    </td>
+                    <td></td>
+                    <td>
+                        <a class="btn btn-primary" th:href="@{'/job/'+${job.id}}" role="button" style="float:right">查看详情</a>
+                    </td>
+                </tr>
+                <!-- more data -->
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -124,4 +124,14 @@ public class QuestionService {
         question.setViewCount(1);
         questionExtMapper.incView(question);
     }
+
+    public List<Question> listByViewcount(){
+        QuestionExample questionExample=new QuestionExample();
+        questionExample.setOrderByClause("`view_count` DESC");
+        List<Question> listByCount=questionMapper.selectByExample(questionExample);
+        if(listByCount.size()>8){
+            listByCount=listByCount.subList(0, 7);
+        }
+        return listByCount;
+    }
 }

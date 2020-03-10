@@ -83,6 +83,30 @@
             reader.readAsDataURL(file);
         }
     </script>
+    <script>
+        function Juge(myform){
+            if (myform.EstablishTime.value == ""){
+                alert("请输入成立时间!");myform.EstablishTime.focus();
+                return false;
+            }
+            if (myform.phone.value == ""){
+                alert("请输入联系方式!");myform.phone.focus();
+                return false;
+            }
+            if (myform.HrName.value == ""){
+                alert("请输入联系人名称!");myform.HrName.focus();
+                return false;
+            }
+            if (myform.email.value == ""){
+                alert("请输入邮箱地址!");myform.email.focus();
+                return false;
+            }
+            if (myform.address.value == ""){
+                alert("请输入公司地址!");myform.address.focus();
+                return false;
+            }
+        }
+    </script>
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -95,7 +119,7 @@
             <div th:if="${selectionName=='详细信息'}">
                 <div class="media-left">
                     <!--<img class="media-object img-rounded media-object" id="img" src="/show?fileName=${fileName}" alt="图片" onerror="this.src='/img/pic3.jpg'" onchange="upLoad()">-->
-                    <form action="fileUpload" method="post" enctype="multipart/form-data">
+                    <form action="fileUpload" method="post" enctype="multipart/form-data" onsubmit="return Juge(this)">
                         <!--<img class="media-object img-rounded media-object" id="img" th:src="${fileName!=null? '/show?fileName=${fileName}':'/img/pic1.jpg'}"  alt="头像">-->
                         <!--上传图片-->
                         <img class="media-object img-rounded media-object" id="img" th:src="@{${session.user.getAvatarUrl()}}" onerror="this.src='/img/pic2.jpg'" alt="头像" onchange="upLoad()">
@@ -145,7 +169,7 @@
                            style="width: 100%;height:100%;opacity: 0;position: absolute;left:0;top: 0;"/>-->
                 </div>
                 <div class="media-body">
-                    <form class="form-horizontal" method="post" action="/profile/info">
+                    <form class="form-horizontal" method="post" action="/profile/info" >
                         <div class="form-group">
                             <label for="creditCode" class="col-md-2 control-label">信用代码</label>
                             <div class="col-md-4">
@@ -212,7 +236,7 @@
                         </form>
                         <a class="btn btn-primary" th:href="@{'/deleteJob/'+${job.id}}" role="button" style="float:right">删除</a>
                         <h4 class="media-heading">
-                            <a th:href="@{'/job/'+${job.id}}" th:text="${job.name}"></a>
+                            <a style="text-decoration:none" th:href="@{'/job/'+${job.id}}" th:text="${job.name}"></a>
                         </h4>
 
                         </br>
@@ -234,7 +258,6 @@
                 <a href="/profile/jobs" class="list-group-item " th:classappend="${selection=='jobs'}?'active':''">
                    发布职位
                 </a>
-                <a href="/profile/liking" class="list-group-item" th:classappend="${selection==''}?'active':''">我关注的话题</a>
             </div>
         </div>
     </div>

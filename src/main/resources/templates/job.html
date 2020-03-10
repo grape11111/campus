@@ -9,11 +9,40 @@
 
     <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+
+
+    <script>
+        var query1=null;
+        $(document).ready(function() {
+            $(document).on("click","#deliver",function(){
+                query1=document.getElementById("enterpriseId").innerText;
+                deliver(query1);
+            })
+        });
+        function deliver(query1){
+            $.ajax({
+                type: 'post',
+                url: 'http://localhost:8080/deliver',
+                cache: false, // 禁用缓存
+                data: {
+                    "enterpriseId": query1
+                },
+
+                success: function (data) {
+                    var res=data.result
+                    var email="请将简历投递至邮箱："+res
+                    var rowTr=document.getElementById("email");
+                    rowTr.innerHTML = email
+                },
+            })
+        }
+    </script>
+
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
 
-<div class="container-fluid main-index">
+<div class="container-fluid main-index " style="padding-bottom: 15px">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
             <h2 th:text="${job.name}"></h2>
@@ -23,11 +52,20 @@
                 <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="float:right">编辑</span>
             </a>
             <hr>
-            <span style="color:dodgerblue;font-size: large" th:text="工作内容"></span></br>
-            <textarea id="content" name="content"  th:text="${job.content}"  cols="30" rows="10" style="border:none;resize:none;cursor:pointer" readonly="readonly"> </textarea>
+            <div class="form-group">
+                <h3 for="requirement" class="col-md-2 control-label" style="color:#3072ab">工作内容</h3>
+                <div class="col-md-12">
+                    <textarea id="content" name="content"  th:text="${job.content}" class="col-md-12" cols="30" rows="5" style="border:none;resize:none;cursor:pointer;background-color: white"  readonly="readonly"> </textarea>
+                </div>
+            </div>
+
             </br>
-            <span style="color:dodgerblue;font-size: large" th:text="工作要求"></span></br>
-            <textarea id="requirement" name="requirement"  th:text="${job.requirement}" cols="30" rows="10" style="border:none;resize: none;cursor:pointer" readonly="readonly"></textarea>
+            <div class="form-group">
+                <h3 for="requirement" class="col-md-2 control-label" style="color:#3072ab">工作要求</h3>
+                <div class="col-md-12">
+                    <textarea id="requirement" name="requirement"  th:text="${job.requirement}" class="col-md-12" cols="30" rows="8" style="border:none;resize:none;cursor:pointer;background-color: white" readonly="readonly"> </textarea>
+                </div>
+            </div>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>公司</h3>
@@ -40,13 +78,16 @@
                 </br>
                 <h5 class="media-heading">
                     <span th:text="${job.enterpriseName}" style="font-size:18px"></span>
+                    <span id="enterpriseId" th:text="${job.enterpriseId}" style="font-size:18px" hidden></span>
                 </h5>
-
+                <br>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h3>相关问题</h3>
+            <span id="deliver" class="label label-success" style="font-size:15px">简历投递渠道</span><br>
+            <br>
+            <span id="email" style="color: #3072ab;font-size:15px"></span>
         </div>
     </div>
 </div>

@@ -19,7 +19,9 @@
 
 [图片上传](https://www.jb51.net/article/146012.htm)
 
+[ajax处理后台返回的list](https://blog.csdn.net/jeremyjone/article/details/80359333)
 
+[css样式](<link rel="stylesheet" type="text/css" href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css">)
 ##SQL语句
 ```sql
 
@@ -43,3 +45,31 @@ ALTER TABLE user ADD bio varchar(256) NULL;
 mvn flyway:migrate;
 mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 ```
+登录验证
+<script>
+    function Juge(myform) {
+        var username=myform.username.value;
+        var password=myform.password.value;
+        var type=myform.type.value;
+        check(username,password,type)
+    }
+
+    function check(username,password,type){
+        $.ajax({
+            type: 'post',
+            url: 'check',
+            cache: false, // 禁用缓存
+            data: {
+                "username": username,
+                "password": password,
+                "type": type
+            },
+
+            success: function (data) {
+                if(num<6){
+                    $("#tip2").html("<font color=\"red\" size=\"2\">  密码至少要6位！</font>");
+                }
+            }
+        })
+    }
+</script>

@@ -7,8 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class EnterpriseController {
@@ -39,5 +42,16 @@ public class EnterpriseController {
         enterprise.setGmtCreate(System.currentTimeMillis());
         enterpriseService.createOrUpdate(enterprise);
         return "redirect:/campus";
+    }
+
+
+    @ResponseBody
+    @PostMapping("/deliver")
+    public Map<String,String> selectById(HttpServletRequest request,Model model){
+        int enterpriseId=Integer.parseInt(request.getParameter("enterpriseId"));
+        Enterprise enterprise=enterpriseService.selectByEntId(enterpriseId);
+        Map<String,String> resultMap=new HashMap<String,String>();
+        resultMap.put("result",enterprise.getEmail());
+        return resultMap;
     }
 }

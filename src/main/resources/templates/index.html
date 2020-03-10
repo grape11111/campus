@@ -9,46 +9,48 @@
 
     <script src="js/jquery-3.4.1.min.js" type="application/javascript"></script>
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
-
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
-<!--轮播图-->
-<div class="col-md-11" style="margin:0px 60px">
-<div id="myCarousel" class="carousel slide carousel-hight">
-    <!-- 轮播（Carousel）指标 -->
-    <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-    </ol>
-    <!-- 轮播（Carousel）项目 -->
-    <div class="carousel-inner carousel-hight">
-        <div class="item active">
-            <img src="https://static.runoob.com/images/mix/img_fjords_wide.jpg" alt="First slide">
-        </div>
-        <div class="item">
-            <img src="https://static.runoob.com/images/mix/img_nature_wide.jpg" alt="Second slide">
-        </div>
-        <div class="item">
-            <img src="https://static.runoob.com/images/mix/img_mountains_wide.jpg" alt="Third slide">
-        </div>
-    </div>
-    <!-- 轮播（Carousel）导航 -->
-    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
-</div>
+
 
 <div class="container-fluid main-index">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+            <!--轮播图-->
+            <div  style="margin-top:15px">
+                <div id="myCarousel" class="carousel slide carousel-hight">
+                    <!-- 轮播（Carousel）指标 -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1"></li>
+                        <li data-target="#myCarousel" data-slide-to="2"></li>
+                    </ol>
+                    <!-- 轮播（Carousel）项目 -->
+                    <div class="carousel-inner carousel-hight">
+                        <div class="item active">
+                            <img src="https://static.runoob.com/images/mix/img_fjords_wide.jpg" alt="First slide">
+                        </div>
+                        <div class="item">
+                            <img src="https://static.runoob.com/images/mix/img_nature_wide.jpg" alt="Second slide">
+                        </div>
+                        <div class="item">
+                            <img src="https://static.runoob.com/images/mix/img_mountains_wide.jpg" alt="Third slide">
+                        </div>
+                    </div>
+                    <!-- 轮播（Carousel）导航 -->
+                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+
+
             <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp 热门推荐</h2>
             <hr>
             <!--卡片式列表-->
@@ -70,199 +72,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-4">
-                    <div class="thumbnail">
-                        <div class="media-body">
-                            <a href="">
-                                <img class="media-object img-rounded media-object company-logo"  th:src="${'/img/pic2.jpg'}"  alt="头像">
-                            </a>
-                            <div class="job-context">
-                                <h4 class="media-heading">
-                                    <a href="/campus" th:text="字节跳动"></a>
-                                </h4>
-                                <span>前端工程师</span> </br>
-                                <span class="desc">每周3天</span> </br>
-                                <span class="desc" >2000-3000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-4">
-                    <div class="thumbnail">
-                        <div class="media-body">
-                            <a href="">
-                                <img class="media-object img-rounded media-object company-logo"  th:src="${'/img/pic2.jpg'}"  alt="头像">
-                            </a>
-                            <div class="job-context">
-                                <h4 class="media-heading">
-                                    <a href="/campus" th:text="字节跳动"></a>
-                                </h4>
-                                <span>前端工程师</span> </br>
-                                <span class="desc">每周3天</span> </br>
-                                <span class="desc" >2000-3000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <div class="row">
-                <div class="col-sm-6 col-md-4">
-                    <div class="thumbnail">
-                        <div class="media-body">
-                            <a href="">
-                                <img class="media-object img-rounded media-object company-logo"  th:src="${'/img/pic2.jpg'}"  alt="头像">
-                            </a>
-                            <div class="job-context">
-                                <h4 class="media-heading">
-                                    <a href="/campus" th:text="字节跳动"></a>
-                                </h4>
-                                <span>前端工程师</span> </br>
-                                <span class="desc">每周3天</span> </br>
-                                <span class="desc" >2000-3000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                 <div class="col-sm-6 col-md-4">
-                     <div class="thumbnail">
-                         <div class="media-body">
-                             <a href="">
-                                    <img class="media-object img-rounded media-object company-logo"  th:src="${'/img/pic2.jpg'}"  alt="头像">
-                             </a>
-                             <div class="job-context">
-                                 <h4 class="media-heading">
-                                        <a href="/campus" th:text="字节跳动"></a>
-                                 </h4>
-                                 <span>前端工程师</span> </br>
-                                 <span class="desc">每周3天</span> </br>
-                                 <span class="desc" >2000-3000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6 col-md-4">
-                    <div class="thumbnail">
-                        <div class="media-body">
-                            <a href="">
-                                <img class="media-object img-rounded media-object company-logo"  th:src="${'/img/pic2.jpg'}"  alt="头像">
-                            </a>
-                            <div class="job-context">
-                                <h4 class="media-heading">
-                                    <a href="/campus" th:text="字节跳动"></a>
-                                </h4>
-                                <span>前端工程师</span> </br>
-                                <span class="desc">每周3天</span> </br>
-                                <span class="desc" >2000-3000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
+        </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h2>热门问题</h2>
-            •1.....</br>
-            •2.....</br>
-            •3.....</br>
+            <h2>热门职位</h2>
+            <br>
+            <table class="table table-striped">
+                <th>职位名称</th><th>浏览数</th>
+                <tr class="tr_node"  th:each="job: ${listByCount}">
+                <!--动态载入数据-->
+                    <td><a style="text-decoration:none" th:href="@{'/job/'+${job.id}}" th:text="${job.name}"></a></td>
+                    <td ><span class="label label-info" th:text="${job.viewCount}"></span></td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
 </body>
 </html>
-
-
-
-<!--
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>Grape社区 首页</title>
-</head>
-<body>
-<div>
-        <h3>成功显示</h3>
-</div>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<style>
-    h3{width:100%;padding-bottom:10px;border-bottom:2px solid #CCC;}
-    #close{position:absolute;top:2px;right:2px;}
-    #close span{padding:3px 10px;background-color: #999;font-size:20px;color:white;cursor:pointer;}
-    #log{display: none; width: 400px; height: 400px; padding: 30px 40px; background-color: #F3F5F6; position: fixed; top: 70px;; right: 30px;}
-    .error{float:right;color:red;font-size:1.2em;margin-right:10px}
-</style>
-<link rel="stylesheet" href="/css/bootstrap.min.css">
-<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
-<link rel="stylesheet" href="/css/community.css">
-
-<script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
-<script src="/js/bootstrap.min.js" type="application/javascript"></script>
-
-<body>
-<button onclick="document.getElementById('log').style.display='block'">弹出登录框</button>
-
-<div id="log">
-    <form  action="../control/logincheck.php" method="post">
-        <h3 >请登录</h3>
-        <div class="form-group">
-            <label for="username">用户名*</label>
-            <span id="user"  class="error"> </span>
-            <input type="text" class="form-control"  name="username"
-                   id="username" placeholder="用户名" onblur='checkName()' required />
-        </div>
-        <div class="form-group">
-            <label for="password">密码*</label>
-            <span id="psword" class="error"> </span>
-
-            <input type="password" class="form-control"
-                   name="password"
-                   id="password" placeholder="密码" onblur='checkPassword()' required />
-
-        </div>
-        <div class="checkbox">
-            <label>
-                <span><input type="checkbox" value='true' style="width:15px;height:15px;" > 记住我</span>
-
-            </label>
-        </div>
-        <input type="submit" class="btn btn-primary login-button" value="登录" style="width:70px;height:40px;" />
-        <p class="text-success"  ><a href="register.html">>>还没账号？去注册</a></p>
-
-    </form>
-
-    <div id="close" >
-        <span onclick="document.getElementById('log').style.display='none'">关闭</span>
-    </div>
-
-
-
-</div>
-<script>
-
-    var checkName=function() {
-        document.getElementById("user").innerHTML ="";
-        var name = eval(document.getElementById('username')).value;
-        if (name.length > 20 || name.length < 1)
-            document.getElementById("user").innerHTML = "用户名长度在1-20之间！" ;
-    }
-    var checkPassword = function(){
-        document.getElementById("psword").innerHTML ="";
-        var name = eval(document.getElementById('password')).value;
-        if (name.length > 12 || name.length < 6)
-            document.getElementById("psword").innerHTML="密码长度在6-12之间！" ;
-    }
-
-</script>
-</body>
-</html>
--->

@@ -31,4 +31,14 @@ public class EnterpriseService {
         }
     }
 
+    /**
+     *
+     * @return
+     */
+    public Enterprise selectByEntId(int enterpriseId){
+        Enterprise enterprise=enterpriseMapper.selectByPrimaryKey(enterpriseId);
+        return enterprise;
+    }
+
+
 }

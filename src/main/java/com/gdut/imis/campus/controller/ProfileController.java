@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.List;
@@ -62,9 +63,9 @@ public class ProfileController {
             if(request.getSession().getAttribute("type").toString().equals("2")){
                 return "profileEnt";
             }
-        }else if("replies".equals(action)) {
+        }else if("resume".equals(action)) {
             model.addAttribute("selection", action);
-            model.addAttribute("selectionName","最新回复");
+            model.addAttribute("selectionName","个人简历");
         }else if("liking".equals(action)) {
             model.addAttribute("selection", action);
             model.addAttribute("selectionName","我关注的话题");
