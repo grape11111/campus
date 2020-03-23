@@ -1,5 +1,6 @@
 package com.gdut.imis.campus.controller;
 
+import com.alibaba.fastjson.*;
 import com.gdut.imis.campus.dataobject.PaginationDTO;
 import com.gdut.imis.campus.dataobject.QuestionDTO;
 import com.gdut.imis.campus.model.Enterprise;
@@ -22,7 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ProfileController {
@@ -63,9 +67,21 @@ public class ProfileController {
             if(request.getSession().getAttribute("type").toString().equals("2")){
                 return "profileEnt";
             }
-        }else if("resume".equals(action)) {
+        }else if("recommend".equals(action)) {
+            Student user=(Student)request.getSession().getAttribute("user");
             model.addAttribute("selection", action);
-            model.addAttribute("selectionName","个人简历");
+            Map map=jobService.recommendlist(user.getTargetType(),user.getTargetJob(),"","","");
+            Collection<Object> valueCollection = map.keySet();
+            //将json对象转换成自定义对象
+            List<JobWithBLOBs> joblist = new ArrayList<JobWithBLOBs>();
+            for (Object str : valueCollection) {
+                if(joblist.size()<100){
+                    //JobWithBLOBs temp= JSONObject.toJavaObject(JSONObject.parseObject(str.toString()),JobWithBLOBs.class);
+                    joblist.add( JSONObject.toJavaObject(JSONObject.parseObject(str.toString()),JobWithBLOBs.class));
+                }
+            }
+            model.addAttribute("joblist",joblist);
+            model.addAttribute("selectionName","职位推荐");
         }else if("liking".equals(action)) {
             model.addAttribute("selection", action);
             model.addAttribute("selectionName","我关注的话题");

@@ -113,6 +113,9 @@ public class PublishController {
         model.addAttribute("type",job.getType());
         model.addAttribute("WorkDays",job.getWorkDays());
         model.addAttribute("id", id);
+        model.addAttribute("province", job.getProvince());
+        model.addAttribute("city", job.getCity());
+        model.addAttribute("district", job.getDistrict());
         return "publishEnt";
     }
 

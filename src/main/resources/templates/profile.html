@@ -9,6 +9,10 @@
 
     <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/distpicker/2.0.3/distpicker.js"></script>
+
     <script>
         // 头像预览
         $("#avatar_file").change(function () {
@@ -111,7 +115,90 @@
             }
         }
     </script>
+    <script>
+        var query1=null;
+        var query2=null;
+        var query3=null;
+        var query4=null;
+        var query5=null;
+        $(document).ready(function() {
+            $("p#recommend").click(function () {
+                query1 = document.getElementById("TargetType").value;
+                query2 = document.getElementById("TargetJob").value;
+                query3 = document.getElementById("TargetProvince").value;
+                query4 = document.getElementById("TargetCity").value;
+                query5 = document.getElementById("TargetDistrict").value;
+                recommend(query1, query2, query3, query4, query5)
+            })
+        })
+            function recommend(query1,query2,query3,query4,query5){
+            $.ajax({
+            type : 'post',
+            url : 'http://localhost:8080/profile/recommend',
+            cache : false, // 禁用缓存
+            data :{
+            "TargetType":query1,
+            "TargetJob":query2,
+            "TargetProvince":query3,
+            "TargetCity":query4,
+            "TargetDistrict":query5
+            } ,
 
+            success : function(data) {
+            //取出后端传过来的list值
+            var temp = JSON.stringify(data)
+            //JSON数组字符串 转换成 JSON数组
+            var res=$.parseJSON(temp);
+            $('.table').empty()
+            var jobs="<table id='table' class='table'>"
+            $.each(res,function(index,val) {
+            var value=JSON.parse($.parseJSON(JSON.stringify(index)))
+            var newtime=gettime(value.gmtCreate)
+            jobs = jobs+"<tr><td>"
+                +"<img class='media-object img-rounded media-object' style='float:left;margin-right:40px' id='img' src="+value.enterpriseLogo+" >"
+                +"<h4 class='media-heading'>"
+                    +"<a style='text-decoration:none' href='/job/"+value.id+"'>"+value.name+"</a>"
+                    +"</h4>"
+                +"<span class='desc'>"+value.workDays+"</span><span class='desc'>天/周 | </span>"
+                +"<span class='desc'>"+value.degree+"</span><span class='desc'> | </span>"
+                +"<span class='desc'>"+newtime+"</span>"
+                +"</td>"
+                +"<td></td>"
+                +"<td> <a class='btn btn-primary' href='/job/"+value.id+"' role='button' style='float:right'>查看详情</a> </td>"
+                +"</tr>"
+            })
+            //将要展示的信息写入页面
+            jobs=jobs+"</table>"
+            var rowTr=document.getElementById("jobs");
+            rowTr.innerHTML = jobs
+            //将信息追加
+            $(".jobs").append(rowTr)
+            }
+
+            });
+
+            }
+            function gettime(t){
+            var _time=new Date(t);
+            var   year=_time.getFullYear();//2017
+            var   month=_time.getMonth()+1;//7
+            var   date=_time.getDate();//10
+            var   hour=_time.getHours();//10
+            var   minute=_time.getMinutes();//56
+            return   year+"-"+month+"-"+date+" "+hour+":"+minute;//这里自己按自己需要的格式拼接
+            }
+    </script>
+    <!--<script>
+        $(function() {
+            var province = $("tt").text();
+            alert(province)
+            var city = $("c").text();
+            var district = $("d").text();
+            if (!isNull(province)) {
+                $("#TargetType option[value='" + province + "']").attr("selected", true);
+            }
+        })
+    </script>-->
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -276,28 +363,80 @@
                 </nav>
             </div>
 
-            <div th:if="${selectionName=='个人简历'}">
-               <h3 style="color: #3072ab"><span class="glyphicon glyphicon-bookmark"></span>&nbsp 基本信息</h3>
+            <div th:if="${selectionName=='职位推荐'}">
+               <h3 style="color: #3072ab"><span class="glyphicon glyphicon-bookmark"></span>&nbsp 意向职位</h3>
                 <br>
-                <table class="table">
-                    <tr>
-                        <td style="color: #3072ab"><span class="glyphicon glyphicon-user"></span> 姓名</td><td th:text="${session.user.getName()}"></td>
-                        <td style="color: #3072ab"><span class="glyphicon glyphicon-calendar"></span> 出生年月</td><td th:text="${#dates.format(session.user.getBirth(),'YYYY-MM-dd')}"></td>
-                    </tr>
-                    <tr>
-                        <td style="color: #3072ab"><span class="glyphicon glyphicon-envelope"></span> 邮箱</td><td th:text="${session.user.getEmail()}"></td>
-                        <td style="color: #3072ab"><span class="glyphicon glyphicon-phone"></span> 联系方式</td><td th:text="${session.user.getPhone()}"></td>
-                    </tr>
-                    <tr>
-                        <td style="color: #3072ab"><span class="glyphicon glyphicon-th-large"></span> 学历</td><td th:text="${session.user.getDegree()}"></td>
-                        <td style="color: #3072ab"><span class="glyphicon glyphicon-star"></span> 专    业</td><td th:text="${session.user.getMajor()}"></td>
-                    </tr>
-                    <tr>
-                        <td style="color: #3072ab"><span class="glyphicon glyphicon-home"></span> 地址</td><td colspan="3" th:text="${session.user.getAddress()}" style="column-span: 3"></td>
-                    </tr>
-                </table>
-                <h3 style="color: #3072ab;top: 5px"><span class="glyphicon glyphicon-tasks"></span>&nbsp 项目经历</h3>
-                <h3 style="color: #3072ab;top: 5px"><span class="glyphicon glyphicon-tasks"></span>&nbsp 项目经历</h3>
+                <form class="form-horizontal">
+                    <p id="p" th:text="${province}" hidden></p>
+                    <p id="c" th:text="${city}" hidden></p>
+                    <p id="d" th:text="${district}" hidden></p>
+                    <div class="form-group">
+                        <label for="TargetType" class="col-md-2 control-label">目标职位类别</label>
+                        <div class="col-md-8">
+                            <select id="TargetType" name="TargetType" class="form-control" size="1">
+                                <option value="" disabled selected>--请选择--</option>
+                                <option value="计算机/网络/技术类">计算机/网络/技术类</option>
+                                <option value="电子/电器/通信技术类">电子/电器/通信技术类</option>
+                                <option value="行政后勤类">行政后勤类</option>
+                                <option value="翻译类">翻译类</option>
+                                <option value="销售类">销售类</option>
+                                <option value="咨询/顾问类">咨询/顾问类</option>
+                                <option value="财务/审计/统计类">财务/审计/统计类</option>
+                                <option value="人力资源类">人力资源类</option>
+                                <option value="金融保险类">金融保险类</option>
+                                <option value="法律类">法律类</option>
+                                <option value="生物/制药/化工/环保类">生物/制药/化工/环保类</option>
+                                <option value="科研类">科研类</option>
+                                <option value="医疗卫生/美容保健类">医疗卫生/美容保健类</option>
+                                <option value="教育/培训类">教育/培训类</option>
+                                <option value="其他类">其他类</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="TargetJob" class="col-md-2 control-label">目标职位名称</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="TargetJob" name="TargetJob" th:value="${session.user.getTargetJob()}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">目标工作地点</label>
+                        <div data-toggle="distpicker">
+                            <div class="col-md-2">
+                                <select id="TargetProvince" name="TargetProvince"  class="form-control"></select>
+                            </div>
+                            <div class="col-md-2">
+                                <select id="TargetCity" name="TargetCity" class="form-control"></select>
+                            </div>
+                            <div class="col-md-2">
+                                <select id="TargetDistrict" name="TargetDistrict" class="form-control"></select>
+                            </div>
+                            <p id="recommend"><a class="btn btn-default" href="#" role="button">提交</a></p>
+                        </div>
+                    </div>
+                </form>
+                <h3 style="color: #3072ab;top: 5px"><span class="glyphicon glyphicon-tasks"></span>&nbsp 推荐列表</h3>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="jobs">
+                    <table id="table" class="table">
+                        <tr class="tr_node"  th:each="job: ${joblist}">
+                            <!--动态载入数据-->
+                            <td>
+                                <img class="media-object img-rounded media-object" style="float:left;margin-right:40px" id="Entimg" th:src="@{${job.enterpriseLogo}}" onerror="this.src='/img/pic2.jpg'" alt="头像">
+                                <h4 class="media-heading">
+                                    <a style="text-decoration:none" th:href="@{'/job/'+${job.id}}" th:text="${job.name}"></a>
+                                </h4>
+                                <span class="desc" th:text="${job.workDays}"></span><span class="desc">天/周 | </span>
+                                <span class="desc" th:text="${job.degree}"></span><span class="desc"> | </span>
+                                <span class="desc" th:text="${#dates.format(job.gmtCreate,'YYYY-MM-dd HH:mm')}"></span>
+                            </td>
+                            <td></td>
+                            <td>
+                                <a class="btn btn-primary" th:href="@{'/job/'+${job.id}}" role="button" style="float:right">查看详情</a>
+                            </td>
+                        </tr>
+                        <!-- more data -->
+                    </table>
+                </div>
                 <br>
             </div>
         </div>
@@ -310,9 +449,8 @@
                 <a href="/profile/questions" class="list-group-item " th:classappend="${selection=='questions'}?'active':''">
                    我的分享
                 </a>
-                <a href="/profile/resume" class="list-group-item" th:classappend="${selection=='resume'}?'active':''">
-                    个人简历
-                    <span class="badge">14</span>
+                <a href="/profile/recommend" class="list-group-item" th:classappend="${selection=='recommend'}?'active':''">
+                    职位推荐
                 </a>
                 <a href="/profile/liking" class="list-group-item" th:classappend="${selection=='liking'}?'active':''">我关注的话题</a>
             </div>

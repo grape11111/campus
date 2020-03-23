@@ -1,11 +1,15 @@
 package com.gdut.imis.campus.service;
 
+import com.alibaba.fastjson.JSON;
 import com.gdut.imis.campus.mapper.*;
 import com.gdut.imis.campus.model.*;
+import com.gdut.imis.campus.utils.RecommendUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class JobService {
@@ -73,6 +77,15 @@ public class JobService {
         return joblist;
     }
 
+    public List<JobWithBLOBs> selectByType(String type){
+        JobExample jobExample = new JobExample();
+        JobExample.Criteria createria=jobExample.createCriteria();
+        if(type!=null && type!="") {
+            createria.andTypeEqualTo(type);
+        }
+        List<JobWithBLOBs> joblist=jobMapper.selectByExampleWithBLOBs(jobExample);
+        return joblist;
+    }
 
     public Integer count() {
         JobExample jobExample=new JobExample();
@@ -155,5 +168,29 @@ public class JobService {
             listByCount=listByCount.subList(0, 7);
         }
         return listByCount;
+    }
+
+
+
+    /**
+     * 推荐列表
+     */
+    public Map<String,Double> recommendlist(String TargetType,String TargetJob,String TargetProvince,String TargetCity,String TargetDistrict) {
+        List<JobWithBLOBs> list = this.selectByType(TargetType);
+        if (list.size() != 0) {
+            Map map = new HashMap<Object, Double>();
+            RecommendUtil recommendUtil = new RecommendUtil();
+            for (int i = 0; i < list.size(); i++) {
+                Double temp = recommendUtil.getCoefficient(list.get(i),TargetJob, TargetProvince, TargetCity, TargetDistrict);
+                map.put(JSON.toJSON(list.get(i)).toString(), temp);
+            }
+
+            if (map.size() == 0) {
+                return map;
+            }
+            Map res = recommendUtil.sortByValue(map);
+            return res;
+        }
+        return null;
     }
 }

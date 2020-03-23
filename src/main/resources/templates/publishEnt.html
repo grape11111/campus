@@ -9,6 +9,11 @@
 
     <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+
+    <!--动态获取省市区-->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/distpicker/2.0.3/distpicker.js"></script>
+
     <script>
         function Juge(myform){
             if (myform.name.value == ""){
@@ -47,7 +52,35 @@
                 alert("请输入工作要求!");myform.requirement.focus();
                 return false;
             }
+            if (myform.province.value == ""){
+                alert("请输入工作要求!");myform.province.focus();
+                return false;
+            }
+            if (myform.city.value == ""){
+                alert("请输入工作要求!");myform.city.focus();
+                return false;
+            }
+            if (myform.district.value == ""){
+                alert("请输入工作地点!");myform.district.focus();
+                return false;
+            }
         }
+    </script>
+    <script>
+        $(function(){
+            var province=$("p").text();
+            var city=$("c").text();
+            var district=$("d").text();
+            if(!isnull(province)){
+                $("#province option[value='"+province+"']").attr("selected", true);
+            }
+            if(!isnull(city)){
+                $("#city option[value='"+city+"']").attr("selected", true);
+            }
+            if(!isnull(district)){
+                $("#district option[value='"+district+"']").attr("selected", true);
+            }
+        });
     </script>
 
 </head>
@@ -118,6 +151,23 @@
                             <option value="5">5</option>
                             <option value="6">6</option>
                         </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p id="p" th:text="${province}" hidden></p>
+                    <p id="c" th:text="${city}" hidden></p>
+                    <p id="d" th:text="${district}" hidden></p>
+                    <label class="col-md-2 control-label">工作地点</label>
+                    <div data-toggle="distpicker">
+                        <div class="col-md-2">
+                            <select id="province" name="province"  class="form-control"></select>
+                        </div>
+                        <div class="col-md-2">
+                            <select id="city" name="city"   class="form-control"></select>
+                        </div>
+                        <div class="col-md-2">
+                            <select id="district" name="district" class="form-control"></select>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

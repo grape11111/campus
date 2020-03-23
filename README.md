@@ -22,6 +22,14 @@
 [ajax处理后台返回的list](https://blog.csdn.net/jeremyjone/article/details/80359333)
 
 [css样式](<link rel="stylesheet" type="text/css" href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css">)
+
+[jQuery中国省市区地址三级联动插件Distpicker](https://www.jianshu.com/p/c0c177f2b603)
+
+
+[map按value排序](https://blog.csdn.net/qq_21539671/article/details/98091016?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task)
+[文本余弦相似度计算](https://blog.csdn.net/qq_14955245/article/details/80609554)
+
+
 ##SQL语句
 ```sql
 
