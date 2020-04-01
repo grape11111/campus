@@ -33,5 +33,6 @@
         <table  tableName="question" domainObjectName="Question" ></table>
         <table  tableName="enterprise" domainObjectName="Enterprise" ></table>
         <table  tableName="job" domainObjectName="Job" ></table>
+        <table  tableName="manager" domainObjectName="Manager" ></table>
     </context>
 </generatorConfiguration>

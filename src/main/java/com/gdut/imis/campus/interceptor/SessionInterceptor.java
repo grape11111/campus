@@ -1,11 +1,9 @@
 package com.gdut.imis.campus.interceptor;
 
 import com.gdut.imis.campus.mapper.EnterpriseMapper;
+import com.gdut.imis.campus.mapper.ManagerMapper;
 import com.gdut.imis.campus.mapper.StudentMapper;
-import com.gdut.imis.campus.model.Enterprise;
-import com.gdut.imis.campus.model.EnterpriseExample;
-import com.gdut.imis.campus.model.Student;
-import com.gdut.imis.campus.model.StudentExample;
+import com.gdut.imis.campus.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -25,12 +23,15 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private EnterpriseMapper enterpriseMapper;
 
+    @Autowired
+    private ManagerMapper managerMapper;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[]cookies=request.getCookies();
         if (cookies!=null&&cookies.length!=0) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName() != null) {
+                if (cookie.getValue()!= null) {
                     if (("accountId").equals(cookie.getName())) {
                         StudentExample studentExample = new StudentExample();
                         studentExample.createCriteria()
@@ -49,6 +50,16 @@ public class SessionInterceptor implements HandlerInterceptor {
                         if (list.size() != 0 && list.get(0).getStatus()==1) {
                             request.getSession().setAttribute("user", list.get(0));
                             request.getSession().setAttribute("type", "2");
+                            return true;
+                        }
+                    }else if(("managerId").equals(cookie.getName())){
+                        ManagerExample managerExample = new ManagerExample();
+                        managerExample.createCriteria()
+                                .andIdEqualTo(Integer.parseInt(cookie.getValue()));
+                        List<Manager>list = managerMapper.selectByExample(managerExample);
+                        if (list.size()!=0) {
+                            request.getSession().setAttribute("user", list.get(0));
+                            request.getSession().setAttribute("type", "1");
                             return true;
                         }
                     }

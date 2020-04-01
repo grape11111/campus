@@ -56,6 +56,17 @@ public class QuestionController {
         return "questions";
     }
 
+    /**
+     * 用户删除某一分享内容
+     * @param id
+     * @return
+     */
+    @GetMapping("/stuDelQuestion/{id}")
+    public String deleteQuestion(@PathVariable(name="id")Integer id,HttpServletRequest request){
+        questionService.delete(id);
+        return"redirect:/profile/questions";
+    }
+
     @GetMapping("/jobs")
     public String listjobs(HttpServletRequest request,Model model) {
         model.addAttribute("option","jobs");

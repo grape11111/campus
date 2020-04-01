@@ -24,7 +24,7 @@ public class JobService {
 
     public List<JobWithBLOBs> list() {
         JobExample jobExample = new JobExample();
-        jobExample.createCriteria();
+        jobExample.setOrderByClause("`gmt_modify` DESC");
         List<JobWithBLOBs> joblist=jobMapper.selectByExampleWithBLOBs(jobExample);
         return joblist;
     }

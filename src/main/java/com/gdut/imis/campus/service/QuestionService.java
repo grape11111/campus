@@ -47,6 +47,12 @@ public class QuestionService {
         return questionDTOList;
     }
 
+
+
+    public void delete(Integer id){
+        questionMapper.deleteByPrimaryKey(id);
+    }
+
     //复制属性值
     public void copyProperties(List<Question> questionlist,List<QuestionDTO> questionDTOList){
         for(Question qt:questionlist){

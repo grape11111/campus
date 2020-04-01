@@ -29,4 +29,12 @@ public class StudentService {
             return list.get(0);
         }
     }
+
+
+    public List<Student> list() {
+        StudentExample studentExample = new StudentExample();
+        studentExample.createCriteria();
+        List<Student> list=studentMapper.selectByExample(studentExample);
+        return list;
+    }
 }

@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${selectionName}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
+
+    <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+<body>
+<div th:insert="~{navigation :: nav}"></div>
+
+<div class="container-fluid main-index">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+            <h2 th:text="${selectionName}"></h2>
+
+            <br>
+            <div th:if="${selectionName!='详细信息'}">
+                <div class="media" th:if="${selectionName=='学校用户管理'}">
+                    <div class="media-body">
+                        <table class="table table-hover">
+                            <th>学号</th>
+                            <th>姓名</th>
+                            <th>邮箱</th>
+                            <th>学历</th>
+                            <th>所属学院</th>
+                            <th>专业</th>
+                            <th></th>
+                            <tr th:each="student: ${paginationDTO.student}">
+                                <td th:text="${student.accountId}"></td>
+                                <td th:text="${student.name}"></td>
+                                <td th:text="${student.email}"></td>
+                                <td th:text="${student.degree}"></td>
+                                <td th:text="${student.dept}"></td>
+                                <td th:text="${student.major}"></td>
+                                <td><a th:if="${student.status==1}" class="btn btn-default" th:href="@{'/setStatus/'+${student.accountId}+'?status=1'}" role="button">冻结</a>
+                                    <a th:if="${student.status==0}" class="btn btn-default" th:href="@{'/setStatus/'+${student.accountId}+'?status=0'}" role="button">解冻</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="media" th:if="${selectionName=='企业用户管理'}">
+
+                    <div class="media-body">
+                        <ul class="nav nav-pills"  style="float:left;padding-bottom: 20px">
+                            <li role="presentation" class="active"><a href="/manager/enterprise">全部</a></li>
+                            <li role="presentation"><a href="/manager/enterprise">待审核</a></li>
+                        </ul>
+                        <br>
+                        <table class="table table-hover">
+                            <th>信用凭证</th>
+                            <th>公司名称</th>
+                            <th>注册人</th>
+                            <th>联系方式</th>
+                            <th>邮箱</th>
+                            <th>状态</th>
+                            <th></th>
+                            <tr th:each="enterprise: ${paginationDTO.enterprise}">
+                                <td th:text="${enterprise.creditCode}"></td>
+                                <td th:text="${enterprise.company}"></td>
+                                <td th:text="${enterprise.hrName}"></td>
+                                <td th:text="${enterprise.phone}"></td>
+                                <td th:text="${enterprise.email}"></td>
+                                <td>
+                                    <p th:if="${enterprise.status==1}">活跃</p>
+                                    <p th:if="${enterprise.status==0}">待审核</p>
+                                    <p th:if="${enterprise.status==2}">审核中</p>
+                                </td>
+                                <td>
+                                    <a class="btn btn-default" th:href="@{'/setStatus/'+${enterprise.id}+'?status=0'}" role="button">删除</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="media" th:if="${selectionName=='用户分享管理'}">
+                    <div class="media" th:each="questionDTO: ${paginationDTO.questions}">
+                        <div class="media-left">
+                        </div>
+                        <div class="media-body">
+                            <a class="btn btn-default" th:href="@{'/manDelQuestion/'+${questionDTO.id}}" role="button" style="float:right">删除</a>
+                            <h4 class="media-heading">
+                                <a th:href="@{'/question/'+${questionDTO.id}}" th:text="${questionDTO.title}"></a>
+                            </h4>
+                            <span th:text="${questionDTO.description}"></span> </br>
+                            <span class="desc" th:text="${questionDTO.viewCount}"></span><span class="desc">次浏览 • </span>
+                            <span class="desc" th:text="${#dates.format(questionDTO.gmtCreate,'YYYY-MM-dd HH:mm')}"></span>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+
+                <div class="media" th:if="${selectionName=='职位管理'}">
+                    <div class="media">
+                        <div class="media-body">
+                            <table class="table table-hover">
+                                <th>职位</th>
+                                <th>公司</th>
+                                <th>浏览量</th>
+                                <th>发布时间</th>
+                                <th></th>
+                                <tr th:each="job: ${paginationDTO.job}">
+                                    <td th:text="${job.name}"></td>
+                                    <td th:text="${job.enterpriseName}"></td>
+                                    <td th:text="${job.viewCount}"></td>
+                                    <td th:text="${#dates.format(job.gmtCreate,'YYYY-MM-dd HH:mm')}"></td>
+                                    <td>
+                                        <a class="btn btn-default" th:href="@{'/manDelJob/'+${job.id}}" role="button">删除</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li>
+                            <a th:href="@{'/manager/'+${selection}(page=1)}" aria-label="Previous">
+                                <span aria-hidden="true">首页</span>
+                            </a>
+                        </li>
+                        <li th:if="${paginationDTO.currentPage>1}">
+                            <a th:href="@{'/manager/'+${selection}(page=${paginationDTO.currentPage -1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li th:each="pagelist: ${paginationDTO.pageList}" th:class="${pagelist==paginationDTO.currentPage}?'active':''">
+                            <a th:href="@{'/manager/'+${selection}(page=${pagelist})}" th:text="${pagelist}"></a>
+                        </li>
+                        <li th:if="${paginationDTO.currentPage<paginationDTO.totalPage}">
+                            <a th:href="@{'/manager/'+${selection}(page=${paginationDTO.currentPage+1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{'/manager/'+${selection}(page=${paginationDTO.totalPage})}" aria-label="Next">
+                                <span aria-hidden="true">末页</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3></h3>
+            <div class="list-group">
+                <a href="/manager/student" class="list-group-item " th:classappend="${selection=='student'}?'active':''">
+                    学校用户管理
+                </a>
+                <a href="/manager/enterprise" class="list-group-item " th:classappend="${selection=='enterprise'}?'active':''">
+                    企业用户管理
+                </a>
+                <a href="/manager/question" class="list-group-item" th:classappend="${selection=='question'}?'active':''">
+                    用户分享管理
+                </a>
+                <a href="/manager/job" class="list-group-item" th:classappend="${selection=='job'}?'active':''">
+                    职位管理
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

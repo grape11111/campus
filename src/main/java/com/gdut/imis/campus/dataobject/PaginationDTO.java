@@ -1,5 +1,9 @@
 package com.gdut.imis.campus.dataobject;
 
+import com.gdut.imis.campus.model.Enterprise;
+import com.gdut.imis.campus.model.Job;
+import com.gdut.imis.campus.model.JobWithBLOBs;
+import com.gdut.imis.campus.model.Student;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -8,6 +12,9 @@ import java.util.List;
 @Data
 public class PaginationDTO {
     private List<QuestionDTO> questions;
+    private List<Student> student;
+    private List<Enterprise> enterprise;
+    private List<JobWithBLOBs> job;
     private int currentPage;
     private int totalPage;
     private List<Integer> pageList;

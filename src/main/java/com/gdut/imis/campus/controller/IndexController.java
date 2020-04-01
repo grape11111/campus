@@ -1,10 +1,12 @@
 package com.gdut.imis.campus.controller;
 
 import com.gdut.imis.campus.mapper.EnterpriseMapper;
+import com.gdut.imis.campus.mapper.ManagerMapper;
 import com.gdut.imis.campus.mapper.StudentMapper;
 import com.gdut.imis.campus.model.*;
 import com.gdut.imis.campus.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,11 +29,23 @@ public class IndexController {
     private EnterpriseMapper enterpriseMapper;
 
     @Autowired
+    private ManagerMapper managerMapper;
+
+    @Autowired
     private JobService jobService;
+
+    @Value("${office_email}")
+    private String office_email;
 
     @GetMapping("/")
     public String test(HttpServletRequest request){
         return "index";
+    }
+
+
+    @GetMapping("/login")
+    public String login(HttpServletRequest request){
+        return "manager/login";
     }
 
     @GetMapping("/campus")
@@ -63,10 +77,14 @@ public class IndexController {
             }
         }
         List<JobWithBLOBs> joblist= jobService.list();
+        if(joblist.size()>15){
+            joblist=joblist.subList(0,15);
+        }
         List<JobWithBLOBs> listByCount= jobService.listByViewcount();
         model.addAttribute("joblist", joblist);
         model.addAttribute("listByCount", listByCount);
         model.addAttribute("option","index");
+        model.addAttribute("office_email",office_email);
         return "index";
     }
 
@@ -75,6 +93,29 @@ public class IndexController {
         String username=request.getParameter("username");
         String pwd=request.getParameter("password");
         String type=request.getParameter("type");
+        //管理员登录
+        if(type.equals("1")){
+            ManagerExample managerExample = new ManagerExample();
+            managerExample.createCriteria()
+                    .andMPhoneEqualTo(username);
+            List<Manager>list = managerMapper.selectByExample(managerExample);
+            if (list.size()!=0) {
+                Manager man=list.get(0);
+                if( pwd.equals(man.getPassword())){
+                    request.getSession().setAttribute("user",man);
+                    request.getSession().setAttribute("type", "1");
+                    response.addCookie(new Cookie("managerId",man.getId().toString()));
+                }else{
+                    model.addAttribute("error","密码出错啦！");
+                    return "error";
+                }
+            }else{
+                model.addAttribute("error","用户不存在！");
+                return "error";
+            }
+            return "redirect:/manager/info";
+        }
+
         if(type.equals("0")){
             StudentExample studentExample = new StudentExample();
             studentExample.createCriteria()
@@ -116,9 +157,14 @@ public class IndexController {
         }
         model.addAttribute("option","index");
         List<JobWithBLOBs> joblist= jobService.list();
+        if(joblist.size()>15){
+            joblist=joblist.subList(0,15);
+        }
         List<JobWithBLOBs> listByCount= jobService.listByViewcount();
         model.addAttribute("joblist", joblist);
         model.addAttribute("listByCount", listByCount);
+        model.addAttribute("option","index");
+        model.addAttribute("office_email",office_email);
         return "index";
     }
 
@@ -132,6 +178,9 @@ public class IndexController {
         Cookie companyId=new Cookie("enterpriseId",null);
         companyId.setMaxAge(0);
         response.addCookie(companyId);
+        Cookie managerId=new Cookie("managerId",null);
+        companyId.setMaxAge(0);
+        response.addCookie(managerId);
         return "redirect:/campus";
     }
 }

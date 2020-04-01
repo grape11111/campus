@@ -40,5 +40,12 @@ public class EnterpriseService {
         return enterprise;
     }
 
+    public List<Enterprise> list() {
+        EnterpriseExample enterpriseExample = new EnterpriseExample();
+        enterpriseExample.createCriteria();
+        List<Enterprise> list=enterpriseMapper.selectByExample(enterpriseExample);
+        return list;
+    }
+
 
 }
