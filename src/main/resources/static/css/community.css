@@ -79,5 +79,8 @@ body{
     font-weight: 600;
 }
 
+.modal-dialog{
+    pointer-events:auto;
+}
 
 

@@ -53,10 +53,10 @@ public class ProfileController {
         if("questions".equals(action)) {
             Student user=(Student)request.getSession().getAttribute("user");
             PageHelper.startPage(page,size);
-            List<QuestionDTO> questionlist= questionService.listByUserId(user.getAccountId());
+            List<QuestionDTO> questionlist= questionService.listByUserId(user.getId());
             PaginationDTO paginationDTO= new PaginationDTO();
             paginationDTO.setQuestions(questionlist);
-            Integer totalCount=questionService.countByUserId(user.getAccountId());
+            Integer totalCount=questionService.countByUserId(user.getId());
             paginationDTO.setPagination(totalCount,size,page);
             model.addAttribute("paginationDTO", paginationDTO);
             model.addAttribute("selection", action);

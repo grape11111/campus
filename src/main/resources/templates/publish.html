@@ -3,12 +3,12 @@
 <head>
     <title>提交分享页面</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="css/community.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
 
-    <script src="js/jquery-3.4.1.min.js" type="application/javascript"></script>
-    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -20,6 +20,7 @@
             <hr>
 
             <form action="/publish" method="post">
+                <input type="text" id="id" name="id" th:value="${id}" hidden="hidden">
                 <div class="form-group">
                     <label for="title">分享主题（简单摘要）：</label>
                     <input type="text" class="form-control" th:value="${title}" id="title" name="title" placeholder="问题标题...">
@@ -40,9 +41,9 @@
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>发起分享的摘要</h3>
-            •1.....</br>
-            •2.....</br>
-            •3.....</br>
+            •1.填写标题（最好不要超过一行）</br>
+            •2.内容简洁扼要</br>
+            •3.分享内容的标签按“、”隔开，标签个数最好控制在3~5个</br>
         </div>
     </div>
 </div>

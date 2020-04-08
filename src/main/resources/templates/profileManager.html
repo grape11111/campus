@@ -48,8 +48,16 @@
 
                     <div class="media-body">
                         <ul class="nav nav-pills"  style="float:left;padding-bottom: 20px">
-                            <li role="presentation" class="active"><a href="/manager/enterprise">全部</a></li>
-                            <li role="presentation"><a href="/manager/enterprise">待审核</a></li>
+                            <li role="presentation" th:classappend="${status=='all'}?'active':''">
+                                <a href="/manager/enterprise/all">
+                                    全部
+                                </a>
+                            </li>
+                            <li role="presentation" th:classappend="${status=='uncheck'}?'active':''">
+                                <a href="/manager/enterprise/uncheck">
+                                    未审核
+                                </a>
+                            </li>
                         </ul>
                         <br>
                         <table class="table table-hover">
@@ -62,7 +70,7 @@
                             <th></th>
                             <tr th:each="enterprise: ${paginationDTO.enterprise}">
                                 <td th:text="${enterprise.creditCode}"></td>
-                                <td th:text="${enterprise.company}"></td>
+                                <td ><a th:href="@{'https://www.baidu.com'}" th:text="${enterprise.company}" target="_blank"></a></td>
                                 <td th:text="${enterprise.hrName}"></td>
                                 <td th:text="${enterprise.phone}"></td>
                                 <td th:text="${enterprise.email}"></td>
@@ -93,8 +101,8 @@
                             <span class="desc" th:text="${questionDTO.viewCount}"></span><span class="desc">次浏览 • </span>
                             <span class="desc" th:text="${#dates.format(questionDTO.gmtCreate,'YYYY-MM-dd HH:mm')}"></span>
                         </div>
+                        <hr>
                     </div>
-                    <hr>
                 </div>
 
                 <div class="media" th:if="${selectionName=='职位管理'}">
@@ -103,12 +111,14 @@
                             <table class="table table-hover">
                                 <th>职位</th>
                                 <th>公司</th>
+                                <th>职业类别</th>
                                 <th>浏览量</th>
                                 <th>发布时间</th>
                                 <th></th>
                                 <tr th:each="job: ${paginationDTO.job}">
                                     <td th:text="${job.name}"></td>
                                     <td th:text="${job.enterpriseName}"></td>
+                                    <td th:text="${job.type}"></td>
                                     <td th:text="${job.viewCount}"></td>
                                     <td th:text="${#dates.format(job.gmtCreate,'YYYY-MM-dd HH:mm')}"></td>
                                     <td>

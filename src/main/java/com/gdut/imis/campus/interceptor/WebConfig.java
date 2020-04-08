@@ -28,6 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
         list.add("/photos/**");
         list.add("/static/**");
         list.add("/login");
+        list.add("/ifExist");
         registry.addInterceptor(sessionInterceptor).addPathPatterns("/**").excludePathPatterns(list);
     }
 }

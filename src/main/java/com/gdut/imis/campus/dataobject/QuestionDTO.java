@@ -3,6 +3,8 @@ package com.gdut.imis.campus.dataobject;
 import com.gdut.imis.campus.model.Student;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class QuestionDTO {
     private Integer id;
@@ -16,4 +18,5 @@ public class QuestionDTO {
     private Integer likeCount;
     private String tag;
     private Student user;
+    private List<String> tags;
 }

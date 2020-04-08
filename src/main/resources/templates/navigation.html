@@ -27,7 +27,42 @@
     }
 
 </script>
+<script>
+    function Juge(myform){
+        var username=myform.username.value
+        var password=myform.password.value
+        var type=myform.type.value
+        alert(username)
+            $.ajax({
+                type : 'post',
+                url : 'http://localhost:8080/ifExist',
+                cache : false, // 禁用缓存
+                data :{
+                    "username":username,
+                    "password":password,
+                    "type":type
+                } ,
 
+                success : function(data) {
+                    var temp = JSON.stringify(data)
+                    //JSON数组字符串 转换成 JSON数组
+                    alert(data+"  "+data.key)
+                    if(data.key==1){
+                        window.location.href="http://localhost:8080/campus";
+                        return false;
+                    }else{
+                        $("#tip1").html(data.value);
+                        return false;
+                    }
+                },
+                error:function(){
+                    $("#tip1").html("登录出错！");
+                    return false;
+                }
+            });
+        }
+
+</script>
 
 <body>
     <div th:fragment="nav">
@@ -38,7 +73,7 @@
                     <a class="navbar-brand" style="font-size:25px;" href="/campus">校园实习网</a>
                 </div>
                 <div class="navbar-header" th:if="${session.user!=null}">
-                    <img th:src="${'/img/pic4.jpg'}"  alt="头像" class="logo">
+                    <img th:src="${'/img/pic4.jpg'}"  alt="网站logo" class="logo">
                     <a  th:if="${session.user.getType()!=1}"  class="navbar-brand" style="font-size:25px;" href="/campus">校园实习网</a>
                     <a  th:if="${session.user.getType()==1}"  class="navbar-brand" style="font-size:25px;" href="/campus">校园实习网后台</a>
                 </div>
@@ -87,7 +122,6 @@
                                                     <label for="username" class="col-sm-2 control-label">账号</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="username" name="username" placeholder="" required="required">
-                                                        <div style="display: inline" id="tip1"></div>
                                                     </div>
                                                 </div>
                                                 <!--密码框-->
@@ -95,7 +129,6 @@
                                                     <label for="password" class="col-sm-2 control-label" >密码</label>
                                                     <div class="col-sm-10">
                                                         <input type="password" class="form-control" id="password"  name="password" placeholder="" required="required">
-                                                        <div style="display: inline" id="tip2"></div>
                                                     </div>
                                                 </div>
                                                 <!--用户类型-->
@@ -108,10 +141,12 @@
                                                         </select>
                                                      </div>
                                                 </div>
+                                                <div id="tip1"></div>
                                                 <!--登陆按钮-->
                                                 <div class="form-group">
                                                     <div class="col-sm-offset-2 col-sm-10">
-                                                        <button type="submit" class="btn btn-primary">登录</button>
+                                                        <!--<button type="submit" class="btn btn-primary">登录</button>-->
+                                                        <button id="login" name="login" type="submit" class="btn btn-primary">登录</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -200,9 +235,9 @@
                         <li class="dropdown" th:if="${session.user!=null}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                                aria-expanded="false">
-                                <span th:if="${session.user.getType()==0}" th:text="${session.user.getName()}"></span>
-                                <span th:if="${session.user.getType()==1}" th:text="${session.user.getmName()}"></span>
-                                <span th:if="${session.user.getType()==2}" th:text="${session.user.getHrName()}"></span>
+                                <span th:if="${session.user.getType()==0}" class="glyphicon glyphicon-user" style="padding: 2px;margin-right: 5px;color: #5bc0de;"></span><span th:if="${session.user.getType()==0}" th:text="${session.user.getName()}"></span>
+                                <span th:if="${session.user.getType()==1}" class="glyphicon glyphicon-user" style="padding: 2px;margin-right: 5px;color:red"></span><span th:if="${session.user.getType()==1}" th:text="${session.user.getmName()}"></span>
+                                <span th:if="${session.user.getType()==2}" class="glyphicon glyphicon-user" style="padding: 2px;margin-right: 5px;color:#f0ad4e"></span><span th:if="${session.user.getType()==2}" th:text="${session.user.getHrName()}"></span>
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">

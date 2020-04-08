@@ -88,7 +88,7 @@ public class PublishController {
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
-        question.setCreator(user.getAccountId());
+        question.setCreator(user.getId());
         questionService.createOrUpdate(question);
         return "redirect:/profile/questions";
     }

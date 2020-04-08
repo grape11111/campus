@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,12 @@ public class QuestionController {
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name="id")Integer id, Model model) {
         QuestionDTO questionDTO = questionService.getById(id);
+        String[] tags=questionDTO.getTag().split("、");
+        List<String> resultList = new ArrayList<>(5);
+        for (String s : tags) {
+            resultList.add(s);
+        }
+        questionDTO.setTags(resultList);
         //增加阅读数
         if(questionDTO.getId()!=null){
             questionService.incView(id);
@@ -50,6 +57,10 @@ public class QuestionController {
         Integer totalCount=questionService.count();
         paginationDTO.setPagination(totalCount,size,page);
         List<Question> listByCount= questionService.listByViewcount();
+        //热门问题只返回前10个
+        if(listByCount.size()>10){
+            listByCount=listByCount.subList(0,10);
+        }
         model.addAttribute("listByCount", listByCount);
         model.addAttribute("paginationDTO", paginationDTO);
         model.addAttribute("option","questions");
@@ -96,6 +107,17 @@ public class QuestionController {
     public String deleteJob(@PathVariable(name="id")Integer id){
         jobService.delete(id);
         return"redirect:/profile/jobs";
+    }
+
+    /**
+     * 删除某一分享内容
+     * @param id
+     * @return
+     */
+    @GetMapping("/deleteQuestion/{id}")
+    public String deleteQuestion(@PathVariable(name="id")Integer id){
+        questionService.delete(id);
+        return"redirect:/profile/questions";
     }
 
     @ResponseBody

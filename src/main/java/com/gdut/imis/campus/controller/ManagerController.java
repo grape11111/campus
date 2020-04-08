@@ -69,6 +69,7 @@ public class ManagerController {
             model.addAttribute("paginationDTO", paginationDTO);
             model.addAttribute("selection", action);
             model.addAttribute("selectionName", "企业用户管理");
+            model.addAttribute("status", "all");
         } else if ("question".equals(action)) {
             PageHelper.startPage(page,size);
             List<QuestionDTO> questionlist= questionService.list();
@@ -93,6 +94,32 @@ public class ManagerController {
             model.addAttribute("selection", action);
             model.addAttribute("selectionName", "详细信息");
         }
+        return "profileManager";
+    }
+
+
+
+    @GetMapping("/manager/enterprise/{action}")
+    public String selectEnterprise(@PathVariable(name = "action") String action, HttpServletRequest request, Model model,
+                          @RequestParam(name = "page", defaultValue = "1") Integer page,
+                          @RequestParam(name = "size", defaultValue = "5") Integer size
+    ) {
+        PageHelper.startPage(page, size);
+        List<Enterprise> enterpriselist=new ArrayList<>();
+        if ("all".equals(action)) {
+            enterpriselist = enterpriseService.list();
+            model.addAttribute("status", "all");
+        }else if("uncheck".equals(action)){
+            enterpriselist = enterpriseService.selectByStatus();
+            model.addAttribute("status", "uncheck");
+        }
+            PaginationDTO paginationDTO = new PaginationDTO();
+            paginationDTO.setEnterprise(enterpriselist);
+            Integer totalCount = enterpriselist.size();
+            paginationDTO.setPagination(totalCount, size, page);
+            model.addAttribute("paginationDTO", paginationDTO);
+            model.addAttribute("selection", "enterprise");
+            model.addAttribute("selectionName", "企业用户管理");
         return "profileManager";
     }
 

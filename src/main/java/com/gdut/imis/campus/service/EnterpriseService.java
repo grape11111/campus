@@ -46,6 +46,12 @@ public class EnterpriseService {
         List<Enterprise> list=enterpriseMapper.selectByExample(enterpriseExample);
         return list;
     }
+    public List<Enterprise> selectByStatus(){
+        EnterpriseExample enterpriseExample = new EnterpriseExample();
+        enterpriseExample.createCriteria().andStatusEqualTo(0);
+        List<Enterprise> list=enterpriseMapper.selectByExample(enterpriseExample);
+        return list;
+    }
 
 
 }

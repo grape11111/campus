@@ -29,7 +29,6 @@
                         <a th:href="@{'/question/'+${questionDTO.id}}" th:text="${questionDTO.title}"></a>
                     </h4>
                     <span th:text="${questionDTO.description}"></span> </br>
-                    <span class="desc" th:text="${questionDTO.commentCount}"></span><span class="desc">个回复 • </span>
                     <span class="desc" th:text="${questionDTO.viewCount}"></span><span class="desc">次浏览 • </span>
                     <span class="desc" th:text="${#dates.format(questionDTO.gmtCreate,'YYYY-MM-dd HH:mm')}"></span>
                 </div>

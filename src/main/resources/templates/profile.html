@@ -323,11 +323,11 @@
                     <div class="media-left">
                     </div>
                     <div class="media-body">
+                        <a class="btn btn-primary" th:href="@{'/deleteQuestion/'+${questionDTO.id}}" role="button" style="float:right">删除</a>
                         <h4 class="media-heading">
                             <a th:href="@{'/question/'+${questionDTO.id}}" th:text="${questionDTO.title}"></a>
                         </h4>
                         <span th:text="${questionDTO.description}"></span> </br>
-                        <span class="desc" th:text="${questionDTO.commentCount}"></span><span class="desc">个回复 • </span>
                         <span class="desc" th:text="${questionDTO.viewCount}"></span><span class="desc">次浏览 • </span>
                         <span class="desc" th:text="${#dates.format(questionDTO.gmtCreate,'YYYY-MM-dd HH:mm')}"></span>
                     </div>
@@ -452,7 +452,7 @@
                 <a href="/profile/recommend" class="list-group-item" th:classappend="${selection=='recommend'}?'active':''">
                     职位推荐
                 </a>
-                <a href="/profile/liking" class="list-group-item" th:classappend="${selection=='liking'}?'active':''">我关注的话题</a>
+                <!--<a href="/profile/liking" class="list-group-item" th:classappend="${selection=='liking'}?'active':''">我关注的话题</a>-->
             </div>
         </div>
     </div>

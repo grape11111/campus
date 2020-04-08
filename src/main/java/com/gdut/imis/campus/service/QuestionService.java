@@ -58,7 +58,7 @@ public class QuestionService {
         for(Question qt:questionlist){
             StudentExample userExample=new StudentExample();
             userExample.createCriteria()
-                    .andAccountIdEqualTo(qt.getCreator());
+                    .andIdEqualTo(qt.getCreator());
             List<Student> list=userMapper.selectByExample(userExample);
             Student user=list.get(0);
             QuestionDTO questionDTO=new QuestionDTO();
@@ -74,7 +74,7 @@ public class QuestionService {
         return questionMapper.selectByExample(questionExample).size();
     }
 
-    public List<QuestionDTO> listByUserId(String id) {
+    public List<QuestionDTO> listByUserId(Integer id) {
         QuestionExample questionExample=new QuestionExample();
         questionExample.createCriteria()
                 .andCreatorEqualTo(id);
@@ -88,7 +88,7 @@ public class QuestionService {
         return questionDTOList;
     }
 
-    public Integer countByUserId(String id) {
+    public Integer countByUserId(Integer id) {
         QuestionExample questionExample=new QuestionExample();
         questionExample.createCriteria()
                 .andCreatorEqualTo(id);
@@ -98,7 +98,7 @@ public class QuestionService {
     public QuestionDTO getById(Integer id) {
         Question question=questionMapper.selectByPrimaryKey(id);
         StudentExample userExample=new StudentExample();
-        userExample.createCriteria().andAccountIdEqualTo(question.getCreator());
+        userExample.createCriteria().andIdEqualTo(question.getCreator());
         Student user=userMapper.selectByExample(userExample).get(0);
         QuestionDTO questionDTO=new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
