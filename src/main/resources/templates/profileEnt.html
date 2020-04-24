@@ -122,7 +122,7 @@
                     <form action="fileUpload" method="post" enctype="multipart/form-data" onsubmit="return Juge(this)">
                         <!--<img class="media-object img-rounded media-object" id="img" th:src="${fileName!=null? '/show?fileName=${fileName}':'/img/pic1.jpg'}"  alt="头像">-->
                         <!--上传图片-->
-                        <img class="media-object img-rounded media-object" id="img" th:src="@{${session.user.getAvatarUrl()}}" onerror="this.src='/img/pic2.jpg'" alt="头像" onchange="upLoad()">
+                        <img class="media-object img-rounded media-object" id="img" th:src="@{${session.user.getAvatarUrl()}}" onerror="this.src='/img/pic3.png'" alt="企业用户logo" onchange="upLoad()">
                         <label for="fileName" class="btn btn-default btn-editPwd">选择图片</label>
                         <input id="fileName" type="file" name="fileName" style="display:none" onchange="upLoad()">
                         <p><input type="submit" class="btn btn-default btn-editPwd" value="上传图片"/></p>

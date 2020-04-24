@@ -70,17 +70,19 @@ public class ProfileController {
         }else if("recommend".equals(action)) {
             Student user=(Student)request.getSession().getAttribute("user");
             model.addAttribute("selection", action);
-            Map map=jobService.recommendlist(user.getTargetType(),user.getTargetJob(),"","","");
-            Collection<Object> valueCollection = map.keySet();
-            //将json对象转换成自定义对象
-            List<JobWithBLOBs> joblist = new ArrayList<JobWithBLOBs>();
-            for (Object str : valueCollection) {
-                if(joblist.size()<100){
-                    //JobWithBLOBs temp= JSONObject.toJavaObject(JSONObject.parseObject(str.toString()),JobWithBLOBs.class);
-                    joblist.add( JSONObject.toJavaObject(JSONObject.parseObject(str.toString()),JobWithBLOBs.class));
+            if(user.getTargetType()!=null && user.getTargetJob()!=null) {
+                Map map = jobService.recommendlist(user.getTargetType(), user.getTargetJob(), "", "", "");
+                Collection<Object> valueCollection = map.keySet();
+                //将json对象转换成自定义对象
+                List<JobWithBLOBs> joblist = new ArrayList<JobWithBLOBs>();
+                for (Object str : valueCollection) {
+                    if (joblist.size() < 100) {
+                        //JobWithBLOBs temp= JSONObject.toJavaObject(JSONObject.parseObject(str.toString()),JobWithBLOBs.class);
+                        joblist.add(JSONObject.toJavaObject(JSONObject.parseObject(str.toString()), JobWithBLOBs.class));
+                    }
                 }
+                model.addAttribute("joblist", joblist);
             }
-            model.addAttribute("joblist",joblist);
             model.addAttribute("selectionName","职位推荐");
         }else if("liking".equals(action)) {
             model.addAttribute("selection", action);

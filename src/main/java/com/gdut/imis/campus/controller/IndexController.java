@@ -155,7 +155,7 @@ public class IndexController {
                     request.getSession().setAttribute("type", "2");
                     response.addCookie(new Cookie("enterpriseId",stu.getId().toString()));
                 }else{
-                    model.addAttribute("error","密码出错啦！");
+                    model.addAttribute("error","密码输入错误！");
                     return "error";
                 }
             }else{
@@ -199,7 +199,7 @@ public class IndexController {
                     request.getSession().setAttribute("type", "1");
                     response.addCookie(new Cookie("managerId",man.getId().toString()));
                 }else{
-                    resultMap.put(0,"密码出错啦");
+                    resultMap.put(0,"密码输入错误");
                 }
             }else{
                 resultMap.put(0,"用户不存在！");

@@ -29,6 +29,13 @@ public class JobService {
         return joblist;
     }
 
+    public int countAll(){
+        JobExample jobExample = new JobExample();
+        jobExample.setOrderByClause("`gmt_modify` DESC");
+        List<JobWithBLOBs> joblist=jobMapper.selectByExampleWithBLOBs(jobExample);
+        return joblist.size();
+    }
+
     /**
      * 单条件查询，按职位名
      * @param condition
@@ -62,9 +69,7 @@ public class JobService {
         if(degree!="" && degree!=null){
             createria.andDegreeEqualTo(degree);
         }
-//        if(name!="" && name!=null){
-//            createria.andNameLike("%"+name+"%");
-//        }
+        jobExample.setOrderByClause("`gmt_modify` DESC");
         List<JobWithBLOBs> joblist=jobMapper.selectByExampleWithBLOBs(jobExample);
         return joblist;
     }
@@ -76,6 +81,16 @@ public class JobService {
         List<JobWithBLOBs> joblist=jobMapper.selectByExampleWithBLOBs(jobExample);
         return joblist;
     }
+
+    public int countByName(String name){
+        JobExample jobExample = new JobExample();
+        JobExample.Criteria createria=jobExample.createCriteria();
+        createria.andNameLike("%"+name+"%");
+        List<JobWithBLOBs> joblist=jobMapper.selectByExampleWithBLOBs(jobExample);
+        return joblist.size();
+    }
+
+
 
     public List<JobWithBLOBs> selectByType(String type){
         JobExample jobExample = new JobExample();

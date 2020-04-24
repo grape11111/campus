@@ -49,6 +49,17 @@ public class RecommendController {
         String TargetProvince=request.getParameter("TargetProvince");
         String TargetCity=request.getParameter("TargetCity");
         String TargetDistrict=request.getParameter("TargetDistrict");
+        //更新学校用户的意向信息
+        Student stu = (Student) request.getSession().getAttribute("user");
+        stu.setTargetJob(TargetJob);
+        stu.setTargetType(TargetType);
+        Student newStu = studentService.createOrUpdate(stu);
+        if (newStu != null) {
+            request.getSession().setAttribute("user", newStu);
+        } else {
+            model.addAttribute("editInfo", "操作失败！");
+        }
+
         Map res=jobService.recommendlist(TargetType,TargetJob,TargetProvince,TargetCity,TargetDistrict);
         if(res.size()==0){
             res.put("ERROR",-1);

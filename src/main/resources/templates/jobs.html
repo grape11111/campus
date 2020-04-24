@@ -233,7 +233,7 @@
         </div>
         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" id="jobs">
             <table id="table" class="table">
-                <tr class="tr_node"  th:each="job: ${joblist}">
+                <tr class="tr_node"  th:each="job: ${paginationDTO.job}">
                     <!--动态载入数据-->
                     <td>
                         <img class="media-object img-rounded media-object" style="float:left;margin-right:40px" id="img" th:src="@{${job.enterpriseLogo}}" onerror="this.src='/img/pic2.jpg'" alt="头像">
@@ -251,6 +251,33 @@
                 </tr>
                 <!-- more data -->
             </table>
+            <nav aria-label="Page navigation">
+                <ul class="pagination" style="padding-left: 280px;">
+                    <li>
+                        <a href="/jobs?page=1" aria-label="Previous">
+                            <span aria-hidden="true">首页</span>
+                        </a>
+                    </li>
+                    <li th:if="${paginationDTO.currentPage>1}">
+                        <a th:href="@{/jobs/(page=${paginationDTO.currentPage -1})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:each="pagelist: ${paginationDTO.pageList}" th:class="${pagelist==paginationDTO.currentPage}?'active':''">
+                        <a th:href="@{/jobs/(page=${pagelist})}" th:text="${pagelist}"></a>
+                    </li>
+                    <li th:if="${paginationDTO.currentPage<paginationDTO.totalPage}">
+                        <a th:href="@{/jobs/(page=${paginationDTO.currentPage+1})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/jobs/(page=${paginationDTO.totalPage})}" aria-label="Next">
+                            <span aria-hidden="true">末页</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

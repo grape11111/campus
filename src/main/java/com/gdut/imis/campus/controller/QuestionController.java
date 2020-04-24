@@ -50,7 +50,7 @@ public class QuestionController {
                          @RequestParam(name="page",defaultValue = "1")Integer page,
                          @RequestParam(name="size",defaultValue = "5")Integer size
     ){
-        PageHelper.startPage(page,size);
+        PageHelper.startPage(page, size);
         List<QuestionDTO> questionlist= questionService.list();
         PaginationDTO paginationDTO= new PaginationDTO();
         paginationDTO.setQuestions(questionlist);
@@ -79,10 +79,17 @@ public class QuestionController {
     }
 
     @GetMapping("/jobs")
-    public String listjobs(HttpServletRequest request,Model model) {
-        model.addAttribute("option","jobs");
+    public String listjobs(HttpServletRequest request,Model model,
+                           @RequestParam(name="page",defaultValue = "1")Integer page,
+                           @RequestParam(name="size",defaultValue = "5")Integer size) {
+        PageHelper.startPage(page, size);
         List<JobWithBLOBs> joblist= jobService.list();
-        model.addAttribute("joblist", joblist);
+        PaginationDTO paginationDTO= new PaginationDTO();
+        paginationDTO.setJob(joblist);
+        Integer totalCount=jobService.count();
+        paginationDTO.setPagination(totalCount,size,page);
+        model.addAttribute("option","jobs");
+        model.addAttribute("paginationDTO", paginationDTO);
         return "jobs";
     }
 
@@ -138,10 +145,18 @@ public class QuestionController {
     }
 
     @GetMapping("/search")
-    public String getByName(HttpServletRequest request, Model model){
+    public String getByName(HttpServletRequest request,
+                            @RequestParam(name="page",defaultValue = "1")Integer page,
+                            @RequestParam(name="size",defaultValue = "5")Integer size,Model model){
+        PageHelper.startPage(page, size);
         String name=request.getParameter("name");
-        List<JobWithBLOBs> joblist=jobService.selectByName(name);
-        model.addAttribute("joblist",joblist);
+        List<JobWithBLOBs> joblist= jobService.selectByName(name);
+        PaginationDTO paginationDTO= new PaginationDTO();
+        paginationDTO.setJob(joblist);
+        Integer totalCount=jobService.countByName(name);
+        paginationDTO.setPagination(totalCount,size,page);
+        model.addAttribute("option","jobs");
+        model.addAttribute("paginationDTO", paginationDTO);
         return "jobs";
     }
 

@@ -9,7 +9,6 @@ import java.util.*;
 public class RecommendUtil {
     Map<Character, int[]> vectorMap = new HashMap<Character, int[]>();
     int[] tempArray = null;
-
     public double getSimilarity(String source,String target){
         for(Character sch:source.toCharArray()){
             if(vectorMap.containsKey(sch)){
@@ -23,7 +22,6 @@ public class RecommendUtil {
                 vectorMap.put(sch, tempArray);
             }
         }
-
         for(Character tch:target.toCharArray()){
             if(vectorMap.containsKey(tch)){
                 vectorMap.get(tch)[1]++;
@@ -37,6 +35,7 @@ public class RecommendUtil {
             }
         }
         double result = 0;
+        //余弦相似度计算
         result = pointMulti(vectorMap) / sqrtMulti(vectorMap);
         return result;
     }
@@ -65,7 +64,7 @@ public class RecommendUtil {
         }
         return result;
     }
-
+    //开根号
     private double sqrtMulti(Map<Character, int[]> paramMap) {
         double result = 0;
         result = squares(paramMap);
@@ -114,7 +113,6 @@ public class RecommendUtil {
             //不同省不同市
             addressSim=0.2;
         }
-        //System.out.println("add"+addressSim);
         //推荐度计算
         res=0.5*typeSim+0.3*jobSim+0.2*addressSim;
         return res;

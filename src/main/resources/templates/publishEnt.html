@@ -140,7 +140,7 @@
                             <option value="其他类">其他类</option>
                         </select>
                     </div>
-                    <label for="WorkDays" class="col-md-2 control-label">每周几天</label>
+                    <label for="WorkDays" class="col-md-2 control-label">每周几天及日薪</label>
                     <div class="col-md-2">
                         <select id="WorkDays" name="WorkDays" class="form-control" size="1">
                             <option value="" disabled selected>--请选择--</option>
@@ -151,6 +151,9 @@
                             <option value="5">5</option>
                             <option value="6">6</option>
                         </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" id="DailySalary" name="DailySalary" th:value="${DailySalary}">
                     </div>
                 </div>
                 <div class="form-group">
@@ -191,9 +194,9 @@
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>发布职位的摘要</h3>
-            •1.....</br>
-            •2.....</br>
-            •3.....</br>
+            •1.</br>
+            •2.内容简洁扼要</br>
+            •3.分享内容的标签按“、”隔开，标签个数最好控制在3~5个</br>
         </div>
     </div>
 </div>

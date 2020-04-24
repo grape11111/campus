@@ -37,4 +37,11 @@ public class StudentService {
         List<Student> list=studentMapper.selectByExample(studentExample);
         return list;
     }
+
+    public int countAll(){
+        StudentExample studentExample = new StudentExample();
+        studentExample.createCriteria();
+        List<Student> list=studentMapper.selectByExample(studentExample);
+        return list.size();
+    }
 }

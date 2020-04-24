@@ -12,6 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 
@@ -66,7 +68,8 @@ public class SessionInterceptor implements HandlerInterceptor {
                 }
             }
         }
-          response.sendError(HttpServletResponse.SC_FORBIDDEN,"用户未登录");
+        //response.sendError(HttpServletResponse.SC_FORBIDDEN,"用户未登录");
+        toAlert(response);
         return false;
     }
 
@@ -78,6 +81,31 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 
+    }
+
+    //前台弹出alert框
+    public void toAlert( HttpServletResponse response){
+
+        try {
+            response.setContentType("text/html;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+
+            OutputStreamWriter out=new OutputStreamWriter(response.getOutputStream());
+
+            String msg="请先进行登录！";
+            msg=new String(msg.getBytes("UTF-8"));
+
+            out.write("<meta http-equiv='Content-Type' content='text/html';charset='UTF-8'>");
+            out.write("<script>");
+            out.write("alert('"+msg+"');");
+            out.write("top.location.href = '/campus'; ");
+            out.write("</script>");
+            out.flush();
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

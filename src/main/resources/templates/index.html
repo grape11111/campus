@@ -59,13 +59,13 @@
                     <div class="thumbnail">
                         <div class="media-body">
                             <a th:href="@{'/job/'+${job.id}}">
-                            <img class="media-object img-rounded media-object company-logo"  th:src="${job.enterpriseLogo}"  alt="头像">
+                            <img class="media-object img-rounded media-object company-logo"  th:src="${job.enterpriseLogo}"  alt="头像" style="width: 80px;height: 80px;">
                             </a>
                             <div class="job-context">
                             <h4 class="media-heading">
-                                <a th:href="@{'/job/'+${job.id}}" th:text="${job.enterpriseName}"></a>
+                                <a th:href="@{'/job/'+${job.id}}" th:text="${job.name}"></a>
                             </h4>
-                            <span th:text="${job.name}"></span> </br>
+                            <span class="desc" th:text="${job.type}"></span></br>
                             <span class="desc" th:text="${job.degree}"></span> </br>
                             <span class="desc" >2000-3000</span>
                             </div>

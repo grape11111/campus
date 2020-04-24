@@ -13,10 +13,29 @@
 </head>
 <body>
 
-        <div class="jumbotron" style="padding-left:260px">
+        <!--<div class="jumbotron" style="padding-left:260px">
             <h1>出错啦！！！</h1>
-            <p>请稍后再尝试....</p>
+            <p th:text="${error}"></p>
+            <p th:if="${error}!=null">请稍后再尝试....</p>
             <p><a class="btn btn-primary btn-lg" href="/campus" role="button">返回首页</a></p>
+        </div>-->
+        <div>
+            <div class="modal-dialog">
+                <div class="modal-content col-md-7">
+                    <!--登陆框头部-->
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">
+                            出错啦
+                        </h4>
+                    </div>
+                    <!--登录框中间部分(from表单)-->
+                    <div class="modal-body">
+                        <p th:text="${error}"></p>
+                        <p th:if="${error}==null">请稍后再尝试....</p>
+                        <p><a class="btn btn-primary col-md-offset-4" href="/campus" role="button">返回首页</a></p>
+                    </div>
+                </div>
+            </div>
         </div>
 </body>
 </html>

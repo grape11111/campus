@@ -116,6 +116,7 @@ public class PublishController {
         model.addAttribute("province", job.getProvince());
         model.addAttribute("city", job.getCity());
         model.addAttribute("district", job.getDistrict());
+        model.addAttribute("DailySalary", job.getDailySalary());
         return "publishEnt";
     }
 
@@ -133,6 +134,7 @@ public class PublishController {
                                @RequestParam(value="id") String id,
                                @RequestParam(value="type") String type,
                                @RequestParam(value="WorkDays") String WorkDays,
+                               @RequestParam(value="DailySalary") String DailySalary,
                                HttpServletRequest request,
                                Model model){
 
@@ -149,6 +151,13 @@ public class PublishController {
         job.setRequirement(requirement);
         job.setType(type);
         job.setWorkDays(Integer.parseInt(WorkDays));
+        job.setDailySalary(Integer.parseInt(DailySalary));
+        String province=request.getParameter("province");
+        String city=request.getParameter("city");
+        String district=request.getParameter("district");
+        job.setProvince(province);
+        job.setCity(city);
+        job.setDistrict(district);
         Enterprise ent = (Enterprise) request.getSession().getAttribute("user");
         job.setEnterpriseId(ent.getId());
         job.setEnterpriseName(ent.getCompany());

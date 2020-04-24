@@ -16,10 +16,56 @@
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
             <h2 th:text="${selectionName}"></h2>
+            <div class="media" th:if="${selectionName=='详细信息'}">
+                <div class="media-body">
+                    <form class="form-horizontal" method="post" action="/manager/info" >
+                        <div class="form-group">
+                            <label for="mName" class="col-md-2 control-label">名  字</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="mName" name="mName" th:value="${session.user.getmName()}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mPhone" class="col-md-2 control-label">联系方式</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="mPhone" name="mPhone" th:value="${session.user.getmPhone()}">
+                            </div>
+                        </div>
 
-            <br>
+                        <div class="form-group">
+                            <label for="mEmail" class="col-md-2 control-label">邮  箱</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="mEmail" name="mEmail" th:value="${session.user.getmEmail()}" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mAddress" class="col-md-2 control-label">办公地址</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="mAddress" name="mAddress" th:value="${session.user.getmAddress()}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-6 col-md-10">
+                                <button type="submit" class="btn btn-success">修改</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div th:if="${selectionName!='详细信息'}">
                 <div class="media" th:if="${selectionName=='学校用户管理'}">
+                    <form class="form-horizontal" method="post" action="/importStudent" onsubmit="return Juge(this)">
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="path" name="path" th:placeholder="文件路径">
+                            </div>
+                            <p><button type="submit" class="btn btn-success">导入学校用户</button></p>
+                        </div>
+                    </form>
+
+
                     <div class="media-body">
                         <table class="table table-hover">
                             <th>学号</th>
@@ -58,6 +104,11 @@
                                     未审核
                                 </a>
                             </li>
+                            <li role="presentation" th:classappend="${status=='nopass'}?'active':''">
+                                <a href="/manager/enterprise/nopass">
+                                    二次审核
+                                </a>
+                            </li>
                         </ul>
                         <br>
                         <table class="table table-hover">
@@ -66,7 +117,8 @@
                             <th>注册人</th>
                             <th>联系方式</th>
                             <th>邮箱</th>
-                            <th>状态</th>
+                            <th th:if="${status=='all'}">状态</th>
+                            <th th:if="${status=='uncheck'}">审核操作</th>
                             <th></th>
                             <tr th:each="enterprise: ${paginationDTO.enterprise}">
                                 <td th:text="${enterprise.creditCode}"></td>
@@ -74,13 +126,21 @@
                                 <td th:text="${enterprise.hrName}"></td>
                                 <td th:text="${enterprise.phone}"></td>
                                 <td th:text="${enterprise.email}"></td>
-                                <td>
+                                <td th:if="${status=='all'}">
                                     <p th:if="${enterprise.status==1}">活跃</p>
                                     <p th:if="${enterprise.status==0}">待审核</p>
-                                    <p th:if="${enterprise.status==2}">审核中</p>
+                                    <p th:if="${enterprise.status==2}">冻结</p>
                                 </td>
-                                <td>
-                                    <a class="btn btn-default" th:href="@{'/setStatus/'+${enterprise.id}+'?status=0'}" role="button">删除</a>
+                                <td th:if="${status=='all'}">
+                                    <a class="btn btn-default" th:href="@{'/setEStatus/'+${enterprise.id}+'?status=0'}" role="button">删除</a>
+                                </td>
+                                <td th:if="${status=='uncheck'}">
+                                    <a class="btn btn-default" th:href="@{'/setEStatus/'+${enterprise.id}+'?status=1'}" role="button">通过</a>
+                                    <a class="btn btn-default" th:href="@{'/setEStatus/'+${enterprise.id}+'?status=2'}" role="button">不通过</a>
+                                </td>
+                                <td th:if="${status=='nopass'}">
+                                    <a class="btn btn-default" th:href="@{'/setEStatus/'+${enterprise.id}+'?status=1'}" role="button">通过</a>
+                                    <a class="btn btn-default" th:href="@{'/setEStatus/'+${enterprise.id}+'?status=0'}" role="button">删除</a>
                                 </td>
                             </tr>
                         </table>
@@ -89,6 +149,7 @@
 
 
                 <div class="media" th:if="${selectionName=='用户分享管理'}">
+                    <br>
                     <div class="media" th:each="questionDTO: ${paginationDTO.questions}">
                         <div class="media-left">
                         </div>
@@ -163,6 +224,9 @@
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3></h3>
             <div class="list-group">
+                <a href="/manager/info" class="list-group-item " th:classappend="${selection=='info'}?'active':''">
+                    详细信息
+                </a>
                 <a href="/manager/student" class="list-group-item " th:classappend="${selection=='student'}?'active':''">
                     学校用户管理
                 </a>

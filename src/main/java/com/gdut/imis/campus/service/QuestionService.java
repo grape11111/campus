@@ -29,11 +29,18 @@ public class QuestionService {
 
     public List<QuestionDTO> list() {
         QuestionExample questionExample = new QuestionExample();
-        questionExample.createCriteria();
+        questionExample.setOrderByClause("`gmt_modified` DESC");
         List<Question> questionlist=questionMapper.selectByExample(questionExample);
         List<QuestionDTO> questionDTOList=new ArrayList<QuestionDTO>();
         this.copyProperties(questionlist,questionDTOList);
         return questionDTOList;
+    }
+
+    public int countAll(){
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria();
+        List<Question> questionlist=questionMapper.selectByExample(questionExample);
+        return questionlist.size();
     }
 
 

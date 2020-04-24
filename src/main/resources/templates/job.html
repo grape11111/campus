@@ -47,11 +47,25 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
             <h2 th:text="${job.name}"></h2>
              发布时间：<span class="desc" th:text="${#dates.format(job.gmtCreate,'YYYY-MM-dd HH:mm')}"></span>
-              | 浏览数：<span class="desc" th:text="${job.viewCount}"></span>
+               浏览数：<span class="desc" th:text="${job.viewCount}"></span><br>
             <a th:href="@{'/publishEnt/'+${job.id}}" class="community-menu" th:if="${(session.user!=null)&&(session.user.id==job.enterpriseId)}">
                 <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="float:right">编辑</span>
             </a>
             <hr>
+            <div class="form-group">
+                <span class="col-md-2 control-label" style="font-size:24px;color:#3072ab">学历要求:</span>
+                <span class="control-label" th:text="${job.degree}" style="font-size:24px"></span>
+            </div>
+            <div class="form-group">
+                <span class="col-md-2 control-label" style="font-size:24px;color:#3072ab">工作天数:</span>
+                <span class="control-label" th:text="${job.workDays}+天" style="font-size:24px"></span>
+            </div>
+            <div class="form-group">
+                <span class="col-md-2 control-label" style="font-size:24px;color:#3072ab">日  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;薪:</span>
+                <span class="control-label" th:text="${job.dailySalary}" style="font-size:24px"></span>
+                <span class="control-label"style="font-size:24px">元/天</span>
+            </div>
+
             <div class="form-group">
                 <h3 for="requirement" class="col-md-2 control-label" style="color:#3072ab">工作内容</h3>
                 <div class="col-md-12">

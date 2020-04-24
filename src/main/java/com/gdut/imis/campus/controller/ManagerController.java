@@ -3,10 +3,8 @@ package com.gdut.imis.campus.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.gdut.imis.campus.dataobject.PaginationDTO;
 import com.gdut.imis.campus.dataobject.QuestionDTO;
-import com.gdut.imis.campus.model.Enterprise;
-import com.gdut.imis.campus.model.JobWithBLOBs;
-import com.gdut.imis.campus.model.Student;
-import com.gdut.imis.campus.model.Job;
+import com.gdut.imis.campus.mapper.ManagerMapper;
+import com.gdut.imis.campus.model.*;
 import com.gdut.imis.campus.service.EnterpriseService;
 import com.gdut.imis.campus.service.JobService;
 import com.gdut.imis.campus.service.QuestionService;
@@ -43,6 +41,9 @@ public class ManagerController {
     @Autowired
     private JobService jobService;
 
+    @Autowired
+    private ManagerMapper managerMapper;
+
     @GetMapping("/manager/{action}")
     public String profile(@PathVariable(name = "action") String action, HttpServletRequest request, Model model,
                           @RequestParam(name = "page", defaultValue = "1") Integer page,
@@ -54,7 +55,8 @@ public class ManagerController {
             List<Student> studentlist = studentService.list();
             PaginationDTO paginationDTO = new PaginationDTO();
             paginationDTO.setStudent(studentlist);
-            Integer totalCount = studentlist.size();
+            //总数要重新计算
+            Integer totalCount = studentService.countAll();
             paginationDTO.setPagination(totalCount, size, page);
             model.addAttribute("paginationDTO", paginationDTO);
             model.addAttribute("selection", action);
@@ -64,7 +66,7 @@ public class ManagerController {
             List<Enterprise> enterpriselist = enterpriseService.list();
             PaginationDTO paginationDTO = new PaginationDTO();
             paginationDTO.setEnterprise(enterpriselist);
-            Integer totalCount = enterpriselist.size();
+            Integer totalCount = enterpriseService.countAll();
             paginationDTO.setPagination(totalCount, size, page);
             model.addAttribute("paginationDTO", paginationDTO);
             model.addAttribute("selection", action);
@@ -75,7 +77,7 @@ public class ManagerController {
             List<QuestionDTO> questionlist= questionService.list();
             PaginationDTO paginationDTO= new PaginationDTO();
             paginationDTO.setQuestions(questionlist);
-            Integer totalCount=questionlist.size();
+            Integer totalCount=questionService.countAll();
             paginationDTO.setPagination(totalCount,size,page);
             model.addAttribute("paginationDTO", paginationDTO);
             model.addAttribute("selection", action);
@@ -85,7 +87,7 @@ public class ManagerController {
             List<JobWithBLOBs> joblist= jobService.list();
             PaginationDTO paginationDTO= new PaginationDTO();
             paginationDTO.setJob(joblist);
-            Integer totalCount=joblist.size();
+            Integer totalCount=jobService.countAll();
             paginationDTO.setPagination(totalCount,size,page);
             model.addAttribute("paginationDTO", paginationDTO);
             model.addAttribute("selection", action);
@@ -98,6 +100,38 @@ public class ManagerController {
     }
 
 
+    /**
+     * 修改管理员信息
+     * @param request
+     * @param model
+     * @return
+     * @throws ParseException
+     */
+
+    @PostMapping("/manager/info")
+    public String editInfo(HttpServletRequest request, Model model) throws ParseException {
+        Manager man = (Manager) request.getSession().getAttribute("user");
+        man.setmName(request.getParameter("mName"));
+        man.setmPhone(request.getParameter("mPhone"));
+        man.setmEmail(request.getParameter("mEmail"));
+        man.setmAddress(request.getParameter("mAddress"));
+        //更新--按账号更新
+        ManagerExample managerExample=new ManagerExample();
+        managerExample.createCriteria()
+                .andIdEqualTo(man.getId());
+        managerMapper.updateByExampleSelective(man,managerExample);
+        List<Manager> list=managerMapper.selectByExample(managerExample);
+        Manager newMan = list.get(0);
+        if (newMan != null) {
+            request.getSession().setAttribute("user", newMan);
+        } else {
+            model.addAttribute("error","修改失败！");
+            return "error";
+        }
+        return "redirect:/manager/info";
+    }
+
+
 
     @GetMapping("/manager/enterprise/{action}")
     public String selectEnterprise(@PathVariable(name = "action") String action, HttpServletRequest request, Model model,
@@ -106,16 +140,22 @@ public class ManagerController {
     ) {
         PageHelper.startPage(page, size);
         List<Enterprise> enterpriselist=new ArrayList<>();
+        Integer totalCount=0;
         if ("all".equals(action)) {
             enterpriselist = enterpriseService.list();
+            totalCount=enterpriseService.countAll();
             model.addAttribute("status", "all");
         }else if("uncheck".equals(action)){
-            enterpriselist = enterpriseService.selectByStatus();
+            enterpriselist = enterpriseService.selectByStatus(0);
+            totalCount=enterpriseService.countByStatus(0);
             model.addAttribute("status", "uncheck");
+        }else if("nopass".equals(action)){
+            enterpriselist = enterpriseService.selectByStatus(2);
+            totalCount=enterpriseService.countByStatus(2);
+            model.addAttribute("status", "nopass");
         }
             PaginationDTO paginationDTO = new PaginationDTO();
             paginationDTO.setEnterprise(enterpriselist);
-            Integer totalCount = enterpriselist.size();
             paginationDTO.setPagination(totalCount, size, page);
             model.addAttribute("paginationDTO", paginationDTO);
             model.addAttribute("selection", "enterprise");
@@ -141,6 +181,29 @@ public class ManagerController {
         return "redirect:/manager/student";
     }
 
+    @GetMapping("/setEStatus/{id}")
+    public String setEStatus(@PathVariable(name = "id") String id,
+                            @RequestParam(name="status") String status,
+                            HttpServletRequest request,
+                            Model model) {
+
+        Enterprise ent = new Enterprise();
+        ent.setId(Integer.parseInt(id));
+        int temp = Integer.parseInt(status);
+        if(temp==0){
+            //同时删除企业发布的职位
+            List<JobWithBLOBs> joblist= jobService.listByEntId(Integer.parseInt(id));
+            for(JobWithBLOBs job:joblist){
+                jobService.delete(job.getId());
+            }
+            // 删除企业
+            enterpriseService.delete(Integer.parseInt(id));
+        }else {
+            ent.setStatus(temp);
+            enterpriseService.createOrUpdate(ent);
+        }
+        return "redirect:/manager/enterprise";
+    }
     /**
      * 管理员删除某一分享内容
      * @param id
@@ -153,7 +216,7 @@ public class ManagerController {
     }
 
     /**
-     * 管理员删除某一分享内容
+     * 管理员删除某一职位
      * @param id
      * @return
      */
@@ -162,6 +225,7 @@ public class ManagerController {
         jobService.delete(id);
         return"redirect:/manager/job";
     }
+
 
 
 }
