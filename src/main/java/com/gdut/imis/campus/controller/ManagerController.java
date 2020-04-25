@@ -9,21 +9,18 @@ import com.gdut.imis.campus.service.EnterpriseService;
 import com.gdut.imis.campus.service.JobService;
 import com.gdut.imis.campus.service.QuestionService;
 import com.gdut.imis.campus.service.StudentService;
+import com.gdut.imis.campus.utils.AlertUtil;
+import com.gdut.imis.campus.utils.ImportMysql;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class ManagerController {
@@ -226,6 +223,36 @@ public class ManagerController {
         return"redirect:/manager/job";
     }
 
+    @PostMapping("/importStudent")
+    public String insertToMysql(HttpServletRequest request, HttpServletResponse response){
+        String path=request.getParameter("path");
+        if(!path.equals(null)) {
+            ImportMysql importMysql = new ImportMysql();
+            List<Student> listExcel= importMysql.getAllByExcel(path);
+            for (Student stu : listExcel) {
+                if (studentService.findByAccountId(stu.getAccountId())==null) {
+                    //不存在插入
+                    studentService.insetStudent(stu);
+                    AlertUtil.alert(response,"用户插入成功！");
+                }else {
+                    //存在就更新
+                    studentService.createOrUpdate(stu);
+                }
+            }
+        }
+        return "redirect:/manager/student";
+    }
 
-
+    @PostMapping("/DownloadFile")
+    @ResponseBody
+    public Map<String,Object> DownloadFile(HttpServletRequest request, HttpServletResponse response){
+        ImportMysql importMysql = new ImportMysql();
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        if(importMysql.downloadfile()){
+            resultMap.put("result","模板已经成功下载至桌面！");
+        }else{
+            resultMap.put("result","模板下载失败！");
+        }
+        return resultMap;
+    }
 }

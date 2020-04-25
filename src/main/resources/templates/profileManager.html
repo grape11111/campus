@@ -9,6 +9,44 @@
 
     <script src="/js/jquery-3.4.1.min.js" type="application/javascript"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+
+    <script type="text/javascript">
+        function ajaxDownload(){
+            $.ajax({
+                type : 'post',
+                url : '/DownloadFile',
+                cache : false, // 禁用缓存
+                async : true,
+
+                success : function(data) {
+                    //取出后端传过来的result值
+                    var temp = JSON.stringify(data.result)
+                    alert(temp)
+                },
+                    error: function(data, status, e) {  //提交失败自动执行的处理函数。
+                        layer.msg("模板下载失败！", {icon: 5});
+                    }
+                });
+        }
+
+        function changeStatus($id, data){
+            var fileName = data.names[0];
+            var fileId = data.ids[0];
+            var tdName = $("#name_" + $id);
+            tdName.html(fileName +
+                "<button οnclick=downLoadFile('"+fileId+"') class='btn btn-info btn-sm pull-right'>下 载</button>&nbsp;&nbsp;&nbsp;&nbsp;"  +
+                "<a οnclick='deleteTr(this)' class='btn btn-danger btn-xs'> 删 除  </a>"
+            );
+        }
+
+        function deleteTr($this){
+            var tr = $this.parentNode.parentNode;
+            var tbody = tr.parentNode;
+            tbody.removeChild(tr);
+        }
+    </script>
+
+</head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
 
@@ -61,10 +99,10 @@
                             <div class="col-md-6">
                                 <input type="text" class="form-control" id="path" name="path" th:placeholder="文件路径">
                             </div>
-                            <p><button type="submit" class="btn btn-success">导入学校用户</button></p>
+                            <p><button type="submit" class="btn btn-success">导入学校用户</button>
+                                <a onclick="ajaxDownload()" class="btn btn-success" style="margin-left: 5px;">下载导入模板</a></p>
                         </div>
                     </form>
-
 
                     <div class="media-body">
                         <table class="table table-hover">

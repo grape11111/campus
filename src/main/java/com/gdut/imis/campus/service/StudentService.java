@@ -14,7 +14,7 @@ public class StudentService {
     @Autowired
     private StudentMapper studentMapper;
 
-
+    //更新学生用户
     public Student createOrUpdate(Student student) {
         if(student.getAccountId()==null){
             //创建
@@ -44,4 +44,20 @@ public class StudentService {
         List<Student> list=studentMapper.selectByExample(studentExample);
         return list.size();
     }
+
+    //插入学生用户
+    public void insetStudent(Student stu){
+        studentMapper.insert(stu);
+    }
+
+    public Student findByAccountId(String accountId){
+        StudentExample stu=new StudentExample();
+        stu.createCriteria().andAccountIdEqualTo(accountId);
+        List<Student>list=studentMapper.selectByExample(stu);
+        if(list.size()!=0) {
+            return list.get(0);
+        }
+        return null;
+    }
+
 }
